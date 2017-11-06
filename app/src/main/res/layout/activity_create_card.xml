@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/ActivityTitle"
+            android:text="@string/create_card_activity" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewTopics"
+            style="@style/AutoCompleteTopicSubTopic"
+            android:layout_below="@+id/textView"
+            android:hint="@string/topic" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewSubTopics"
+            style="@style/AutoCompleteTopicSubTopic"
+            android:layout_below="@+id/autoCompleteTextViewTopics"
+            android:hint="@string/sub_topic" />
+
+        <RelativeLayout
+            android:id="@+id/questionCardView"
+            style="@style/RelativeLayoutForCardView"
+            android:layout_below="@id/autoCompleteTextViewSubTopics">
+
+            <android.support.v7.widget.CardView style="@style/CardViewForCreateCardActivity">
+
+                <EditText
+                    android:id="@+id/questionCardText"
+                    style="@style/TextViewForCardView"
+                    android:hint="@string/question" />
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/answerCardView"
+            style="@style/RelativeLayoutForCardView"
+            android:layout_below="@id/questionCardView">
+
+            <android.support.v7.widget.CardView style="@style/CardViewForCreateCardActivity">
+
+                <EditText
+                    android:id="@+id/answerCardText"
+                    style="@style/TextViewForCardView"
+                    android:hint="@string/answer" />
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/datePicker"
+            style="@style/BasicButton"
+            android:layout_below="@id/answerCardView"
+            android:hint="@string/date_to_learn"
+            android:inputType="date" />
+
+        <Button
+            android:id="@+id/submitButton"
+            style="@style/BasicButton"
+            android:layout_width="256dp"
+            android:layout_below="@id/datePicker"
+            android:layout_margin="16dp"
+            android:hint="@string/done"
+            android:onClick="createCardOnDone" />
+
+    </RelativeLayout>
+
+</ScrollView>
