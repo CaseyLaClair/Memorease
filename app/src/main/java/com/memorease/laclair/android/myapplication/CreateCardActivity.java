@@ -1,9 +1,8 @@
 package com.memorease.laclair.android.myapplication;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.Tag;
 import android.os.Message;
@@ -23,11 +22,13 @@ import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateCardActivity extends AppCompatActivity {
 
     private Button dateButton;
+    private AutoCompleteTextView topicTextView;
     private int year, month, day;
     private DatePickerDialog.OnDateSetListener datePickerListener;
 
@@ -40,13 +41,13 @@ public class CreateCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
 
-        SQLiteDatabase db2 = topicsDbHelper.getReadableDatabase();
-        String[] projection = {
-                CardContract.CardEntry.TOPIC,
-                CardContract.CardEntry.SUB_TOPIC
-        };
+        ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.activity_list_item, topics);
+        topicTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewTopics);
+        topicTextView.setAdapter(adapter);
 
         showDialogOnClick();
+
 
     }
 
@@ -80,6 +81,24 @@ public class CreateCardActivity extends AppCompatActivity {
                 Toast.makeText(CreateCardActivity.this, date, Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+
+    public ArrayList<String> getTopicFromDB(){
+
+        ArrayList<String> topics = new ArrayList<>();
+        String query = String.format("SELECT topic FROM topics");
+        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+
+        if (cursor.moveToFirst())
+            do {
+                topics.add(cursor.getString(1));
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            topicsDbHelper.close();
+
+        return topics;
     }
 
     public void createCardOnDone(View view) {
