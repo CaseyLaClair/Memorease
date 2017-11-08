@@ -87,16 +87,16 @@ public class CreateCardActivity extends AppCompatActivity {
     public ArrayList<String> getTopicFromDB(){
 
         ArrayList<String> topics = new ArrayList<>();
-        String query = String.format("SELECT topic FROM topics");
+        String query = "SELECT topic FROM topics";
         Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
 
-        if (cursor.moveToFirst())
+        if (cursor.moveToFirst()) {
             do {
-                topics.add(cursor.getString(1));
+                topics.add(cursor.getString(cursor.getColumnIndex("topic")));
             } while (cursor.moveToNext());
 
             cursor.close();
-            topicsDbHelper.close();
+        }
 
         return topics;
     }
