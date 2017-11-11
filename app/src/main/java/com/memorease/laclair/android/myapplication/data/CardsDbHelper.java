@@ -11,6 +11,7 @@ public class CardsDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Cards.db";
 
+    //Need to change date created and learn by date to text values.
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

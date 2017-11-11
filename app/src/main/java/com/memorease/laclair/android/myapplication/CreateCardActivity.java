@@ -42,9 +42,14 @@ public class CreateCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_card);
 
         ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.activity_list_item, topics);
-        topicTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextViewTopics);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
+        topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
         topicTextView.setAdapter(adapter);
+
+        ArrayList<String> subtopics = new ArrayList<>(getSubTopicFromDB());
+        ArrayAdapter<String> subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subtopics);
+        topicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
+        topicTextView.setAdapter(subAdapter);
 
         showDialogOnClick();
 
@@ -84,7 +89,7 @@ public class CreateCardActivity extends AppCompatActivity {
     }
 
 
-    public ArrayList<String> getTopicFromDB(){
+    public ArrayList<String> getTopicFromDB() {
 
         ArrayList<String> topics = new ArrayList<>();
         String query = "SELECT topic FROM topics";
@@ -92,7 +97,13 @@ public class CreateCardActivity extends AppCompatActivity {
 
         if (cursor.moveToFirst()) {
             do {
-                topics.add(cursor.getString(cursor.getColumnIndex("topic")));
+                //If first value found @ cursor.getColumnIndex(etc) is equal to
+                //any value in topics already, dont add. Else add.
+                if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
+                    break;
+                } else {
+                    topics.add(cursor.getString(cursor.getColumnIndex("topic")));
+                }
             } while (cursor.moveToNext());
 
             cursor.close();
@@ -101,21 +112,44 @@ public class CreateCardActivity extends AppCompatActivity {
         return topics;
     }
 
+    public ArrayList<String> getSubTopicFromDB() {
+
+        ArrayList<String> subtopics = new ArrayList<>();
+        String query = "SELECT subtopic FROM topics";
+        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                //If first value found @ cursor.getColumnIndex(etc) is equal to
+                //any value in topics already, dont add. Else add.
+                if (subtopics.contains(cursor.getString(cursor.getColumnIndex("subtopic")))) {
+                    break;
+                } else {
+                    subtopics.add(cursor.getString(cursor.getColumnIndex("subtopic")));
+                }
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return subtopics;
+    }
+
     public void createCardOnDone(View view) {
 
         SQLiteDatabase db = cardsDbHelper.getWritableDatabase();
         SQLiteDatabase tDb = topicsDbHelper.getWritableDatabase();
 
-        EditText acTopicText = (EditText)findViewById(R.id.autoCompleteTextViewTopics);
+        EditText acTopicText = (EditText) findViewById(R.id.autoCompleteTextViewTopics);
         String topic = acTopicText.getText().toString().trim();
 
-        EditText acSubTopicText = (EditText)findViewById(R.id.autoCompleteTextViewSubTopics);
+        EditText acSubTopicText = (EditText) findViewById(R.id.autoCompleteTextViewSubTopics);
         String subTopic = acSubTopicText.getText().toString().trim();
 
-        EditText questionText = (EditText)findViewById(R.id.questionCardText);
+        EditText questionText = (EditText) findViewById(R.id.questionCardText);
         String question = questionText.getText().toString().trim();
 
-        EditText answerText = (EditText)findViewById(R.id.answerCardText);
+        EditText answerText = (EditText) findViewById(R.id.answerCardText);
         String answer = answerText.getText().toString().trim();
 
         //Note: may have to change how it's stored as int is too small
@@ -126,7 +160,7 @@ public class CreateCardActivity extends AppCompatActivity {
         int dateCreated = (int) current.getTimeInMillis();
 
         Calendar learnBy = Calendar.getInstance();
-        learnBy.set(year,month,day);
+        learnBy.set(year, month, day);
         int learnByDate = (int) learnBy.getTimeInMillis();
 
 
@@ -147,10 +181,8 @@ public class CreateCardActivity extends AppCompatActivity {
         cv2.put(CardContract.CardEntry.TOPIC, topic);
         cv2.put(CardContract.CardEntry.SUB_TOPIC, subTopic);
 
-        tDb.insert(CardContract.CardEntry.TABLE_NAME_2,null, cv2);
+        tDb.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
 
-        acTopicText.getText().clear();
-        acSubTopicText.getText().clear();
         questionText.getText().clear();
         answerText.getText().clear();
 

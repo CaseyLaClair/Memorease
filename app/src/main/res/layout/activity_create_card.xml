@@ -20,12 +20,14 @@
             android:id="@+id/autoCompleteTextViewTopics"
             style="@style/AutoCompleteTopicSubTopic"
             android:layout_below="@+id/textView"
+            android:completionThreshold="1"
             android:hint="@string/topic" />
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextViewSubTopics"
             style="@style/AutoCompleteTopicSubTopic"
             android:layout_below="@+id/autoCompleteTextViewTopics"
+            android:completionThreshold="1"
             android:hint="@string/sub_topic" />
 
         <RelativeLayout
