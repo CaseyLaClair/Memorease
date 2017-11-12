@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -140,16 +142,16 @@ public class CreateCardActivity extends AppCompatActivity {
         SQLiteDatabase db = cardsDbHelper.getWritableDatabase();
         SQLiteDatabase tDb = topicsDbHelper.getWritableDatabase();
 
-        EditText acTopicText = (EditText) findViewById(R.id.autoCompleteTextViewTopics);
+        EditText acTopicText = findViewById(R.id.autoCompleteTextViewTopics);
         String topic = acTopicText.getText().toString().trim();
 
-        EditText acSubTopicText = (EditText) findViewById(R.id.autoCompleteTextViewSubTopics);
+        EditText acSubTopicText = findViewById(R.id.autoCompleteTextViewSubTopics);
         String subTopic = acSubTopicText.getText().toString().trim();
 
-        EditText questionText = (EditText) findViewById(R.id.questionCardText);
+        EditText questionText = findViewById(R.id.questionCardText);
         String question = questionText.getText().toString().trim();
 
-        EditText answerText = (EditText) findViewById(R.id.answerCardText);
+        EditText answerText = findViewById(R.id.answerCardText);
         String answer = answerText.getText().toString().trim();
 
         //Note: may have to change how it's stored as int is too small
@@ -157,11 +159,13 @@ public class CreateCardActivity extends AppCompatActivity {
         //using YYYY-MM-DD format and converting to milli when
         //doing calculations.
         Calendar current = Calendar.getInstance();
-        int dateCreated = (int) current.getTimeInMillis();
+        DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateCreated = currentFormat.format(current.getTime());
 
         Calendar learnBy = Calendar.getInstance();
+        DateFormat learnByFormat = new SimpleDateFormat("yyyy-MM-dd");
         learnBy.set(year, month, day);
-        int learnByDate = (int) learnBy.getTimeInMillis();
+        String learnByDate = learnByFormat.format(learnBy.getTime());
 
 
         ContentValues cv = new ContentValues();
@@ -186,7 +190,9 @@ public class CreateCardActivity extends AppCompatActivity {
         questionText.getText().clear();
         answerText.getText().clear();
 
-        Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
+        //Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
+        Toast.makeText(CreateCardActivity.this, dateCreated, Toast.LENGTH_LONG).show();
+        //Toast.makeText(CreateCardActivity.this, learnByDate, Toast.LENGTH_LONG).show();
 
     }
 

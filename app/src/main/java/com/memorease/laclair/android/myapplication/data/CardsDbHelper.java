@@ -11,7 +11,6 @@ public class CardsDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Cards.db";
 
-    //Need to change date created and learn by date to text values.
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -19,8 +18,8 @@ public class CardsDbHelper extends SQLiteOpenHelper {
                     CardEntry.SUB_TOPIC + " TEXT," +
                     CardEntry.QUESTION + " TEXT NOT NULL," +
                     CardEntry.ANSWER + " TEXT NOT NULL," +
-                    CardEntry.DATE_CREATED + " INTEGER NOT NULL," +
-                    CardEntry.LEARN_BY_DATE + " INTEGER NOT NULL," +
+                    CardEntry.DATE_CREATED + " TEXT NOT NULL," +
+                    CardEntry.LEARN_BY_DATE + " TEXT NOT NULL," +
                     CardEntry.CORRECT_ANSWERED + " INTEGER DEFAULT 0," +
                     CardEntry.DAYS_COUNTER + " INTEGER DEFAULT 0," +
                     CardEntry.STUDY_TODAY + " INTEGER DEFAULT 0);";
