@@ -31,6 +31,7 @@ public class CreateCardActivity extends AppCompatActivity {
 
     private Button dateButton;
     private AutoCompleteTextView topicTextView;
+    private AutoCompleteTextView subTopicTextView;
     private int year, month, day;
     private DatePickerDialog.OnDateSetListener datePickerListener;
 
@@ -50,8 +51,8 @@ public class CreateCardActivity extends AppCompatActivity {
 
         ArrayList<String> subtopics = new ArrayList<>(getSubTopicFromDB());
         ArrayAdapter<String> subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subtopics);
-        topicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
-        topicTextView.setAdapter(subAdapter);
+        subTopicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
+        subTopicTextView.setAdapter(subAdapter);
 
         showDialogOnClick();
 

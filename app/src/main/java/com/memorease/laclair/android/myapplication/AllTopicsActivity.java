@@ -91,4 +91,11 @@ public class AllTopicsActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+
+        topicsDbHelper.close();
+        super.onDestroy();
+    }
 }
