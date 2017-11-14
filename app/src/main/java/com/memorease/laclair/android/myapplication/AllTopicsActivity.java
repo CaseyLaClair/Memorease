@@ -70,4 +70,25 @@ public class AllTopicsActivity extends AppCompatActivity {
 
         return topics;
     }
+
+    protected void onResume(){
+
+        super.onResume();
+        ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
+
+        ListAdapter listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
+
+        ListView listView = findViewById(R.id.listViewAllTopics);
+        listView.setAdapter(listAdapter);
+
+        //Set click listener for items in listview.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Method write here for get item position on click and send to topic
+                //activity with the topic chosen.
+            }
+        });
+
+    }
 }
