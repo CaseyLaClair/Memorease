@@ -154,10 +154,6 @@ public class CreateCardActivity extends AppCompatActivity {
         EditText answerText = findViewById(R.id.answerCardText);
         String answer = answerText.getText().toString().trim();
 
-        //Note: may have to change how it's stored as int is too small
-        //to handle unix timestamp. Might be better to store as string
-        //using YYYY-MM-DD format and converting to milli when
-        //doing calculations.
         Calendar current = Calendar.getInstance();
         DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateCreated = currentFormat.format(current.getTime());
