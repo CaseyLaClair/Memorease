@@ -44,14 +44,25 @@ public class CreateCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
 
+        topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
+        subTopicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String topicPassed = extras.getString("topicName");
+            String subTopicPassed = extras.getString("subTopicName");
+
+            topicTextView.setText(topicPassed);
+            subTopicTextView.setText(subTopicPassed);
+
+        }
+
         ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
-        topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
         topicTextView.setAdapter(adapter);
 
         ArrayList<String> subtopics = new ArrayList<>(getSubTopicFromDB());
         ArrayAdapter<String> subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subtopics);
-        subTopicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
         subTopicTextView.setAdapter(subAdapter);
 
         showDialogOnClick();
@@ -187,8 +198,8 @@ public class CreateCardActivity extends AppCompatActivity {
         questionText.getText().clear();
         answerText.getText().clear();
 
-        //Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
-        Toast.makeText(CreateCardActivity.this, dateCreated, Toast.LENGTH_LONG).show();
+        Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
+        //Toast.makeText(CreateCardActivity.this, dateCreated, Toast.LENGTH_LONG).show();
         //Toast.makeText(CreateCardActivity.this, learnByDate, Toast.LENGTH_LONG).show();
 
     }
