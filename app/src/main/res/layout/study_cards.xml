@@ -24,18 +24,10 @@
             android:layout_below="@+id/todaysStudyTitle"
             android:hint="@string/topic" />
 
-        <TextView
-            android:id="@+id/subTopicStudyToday"
-            style="@style/TodaysStudyTopSubtopicText"
-            android:layout_alignLeft="@+id/topicStudyToday"
-            android:layout_alignStart="@+id/topicStudyToday"
-            android:layout_below="@+id/topicStudyToday"
-            android:hint="@string/sub_topic" />
-
         <RelativeLayout
             android:id="@+id/questionCardView"
             style="@style/RelativeLayoutForCardView"
-            android:layout_below="@id/subTopicStudyToday">
+            android:layout_below="@id/topicStudyToday">
 
             <android.support.v7.widget.CardView style="@style/CardViewForCreateCardActivity">
 

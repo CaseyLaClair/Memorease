@@ -23,17 +23,10 @@
             android:completionThreshold="1"
             android:hint="@string/topic" />
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextViewSubTopics"
-            style="@style/AutoCompleteTopicSubTopic"
-            android:layout_below="@+id/autoCompleteTextViewTopics"
-            android:completionThreshold="1"
-            android:hint="@string/sub_topic" />
-
         <RelativeLayout
             android:id="@+id/questionCardView"
             style="@style/RelativeLayoutForCardView"
-            android:layout_below="@id/autoCompleteTextViewSubTopics">
+            android:layout_below="@id/autoCompleteTextViewTopics">
 
             <android.support.v7.widget.CardView
                 style="@style/CardViewForCreateCardActivity">

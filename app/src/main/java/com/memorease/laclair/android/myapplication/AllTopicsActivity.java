@@ -18,9 +18,6 @@ public class AllTopicsActivity extends AppCompatActivity {
 
     TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
 
-    //Find a way to update database and reload other activities as soon as it happens.
-    //Because there's an issue with changing activities and newly created items not showing up.
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

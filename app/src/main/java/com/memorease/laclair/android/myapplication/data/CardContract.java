@@ -14,7 +14,6 @@ public final class CardContract {
         public static final String TABLE_NAME = "cards";
         public static final String TABLE_NAME_2 = "topics";
         public static final String TOPIC = "topic";
-        public static final String SUB_TOPIC = "subtopic";
         public static final String QUESTION = "question";
         public static final String ANSWER = "answer";
         public static final String DATE_CREATED = "datecreated ";

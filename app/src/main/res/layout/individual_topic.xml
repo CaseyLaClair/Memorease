@@ -17,11 +17,6 @@
             style="@style/TopicTextViews"
             android:hint="@string/topic" />
 
-        <TextView
-            android:id="@+id/topicSubTopic"
-            style="@style/TopicTextViews"
-            android:layout_below="@+id/topicTop" />
-
         <Button
             android:id="@+id/studyCards"
             android:layout_width="match_parent"
@@ -30,7 +25,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="18dp"
-            android:layout_below="@+id/topicSubTopic"
+            android:layout_below="@+id/topicTop"
             android:layout_centerHorizontal="true" />
 
         <Button

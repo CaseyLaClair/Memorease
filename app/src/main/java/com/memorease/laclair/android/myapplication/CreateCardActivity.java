@@ -31,7 +31,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
     private Button dateButton;
     private AutoCompleteTextView topicTextView;
-    private AutoCompleteTextView subTopicTextView;
     private int year, month, day;
     private DatePickerDialog.OnDateSetListener datePickerListener;
 
@@ -45,25 +44,17 @@ public class CreateCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_card);
 
         topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
-        subTopicTextView = findViewById(R.id.autoCompleteTextViewSubTopics);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String topicPassed = extras.getString("topicName");
-            String subTopicPassed = extras.getString("subTopicName");
 
             topicTextView.setText(topicPassed);
-            subTopicTextView.setText(subTopicPassed);
-
         }
 
         ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
         topicTextView.setAdapter(adapter);
-
-        ArrayList<String> subtopics = new ArrayList<>(getSubTopicFromDB());
-        ArrayAdapter<String> subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subtopics);
-        subTopicTextView.setAdapter(subAdapter);
 
         showDialogOnClick();
 
@@ -126,29 +117,6 @@ public class CreateCardActivity extends AppCompatActivity {
         return topics;
     }
 
-    public ArrayList<String> getSubTopicFromDB() {
-
-        ArrayList<String> subtopics = new ArrayList<>();
-        String query = "SELECT subtopic FROM topics";
-        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                //If first value found @ cursor.getColumnIndex(etc) is equal to
-                //any value in topics already, dont add. Else add.
-                if (subtopics.contains(cursor.getString(cursor.getColumnIndex("subtopic")))) {
-                    break;
-                } else {
-                    subtopics.add(cursor.getString(cursor.getColumnIndex("subtopic")));
-                }
-            } while (cursor.moveToNext());
-
-            cursor.close();
-        }
-
-        return subtopics;
-    }
-
     public void createCardOnDone(View view) {
 
         SQLiteDatabase db = cardsDbHelper.getWritableDatabase();
@@ -156,9 +124,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
         EditText acTopicText = findViewById(R.id.autoCompleteTextViewTopics);
         String topic = acTopicText.getText().toString().trim();
-
-        EditText acSubTopicText = findViewById(R.id.autoCompleteTextViewSubTopics);
-        String subTopic = acSubTopicText.getText().toString().trim();
 
         EditText questionText = findViewById(R.id.questionCardText);
         String question = questionText.getText().toString().trim();
@@ -178,7 +143,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
         ContentValues cv = new ContentValues();
         cv.put(CardContract.CardEntry.TOPIC, topic);
-        cv.put(CardContract.CardEntry.SUB_TOPIC, subTopic);
         cv.put(CardContract.CardEntry.QUESTION, question);
         cv.put(CardContract.CardEntry.ANSWER, answer);
         cv.put(CardContract.CardEntry.DATE_CREATED, dateCreated);
@@ -191,7 +155,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
         ContentValues cv2 = new ContentValues();
         cv2.put(CardContract.CardEntry.TOPIC, topic);
-        cv2.put(CardContract.CardEntry.SUB_TOPIC, subTopic);
 
         tDb.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
 

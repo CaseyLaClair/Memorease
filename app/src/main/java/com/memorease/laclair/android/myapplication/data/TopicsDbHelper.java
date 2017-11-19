@@ -14,8 +14,7 @@ public class TopicsDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CardEntry.TABLE_NAME_2 + " (" +
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    CardEntry.TOPIC + " TEXT NOT NULL," +
-                    CardEntry.SUB_TOPIC + " TEXT);";
+                    CardEntry.TOPIC + " TEXT NOT NULL);";
 
 
     private static final String SQL_DELETE_ENTRIES =

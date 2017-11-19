@@ -15,7 +15,6 @@ public class CardsDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     CardEntry.TOPIC + " TEXT NOT NULL," +
-                    CardEntry.SUB_TOPIC + " TEXT," +
                     CardEntry.QUESTION + " TEXT NOT NULL," +
                     CardEntry.ANSWER + " TEXT NOT NULL," +
                     CardEntry.DATE_CREATED + " TEXT NOT NULL," +
