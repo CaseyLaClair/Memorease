@@ -14,8 +14,7 @@
 
         <TextView
             android:id="@+id/topicTop"
-            style="@style/TopicTextViews"
-            android:hint="@string/topic" />
+            style="@style/TopicTextViews" />
 
         <Button
             android:id="@+id/studyCards"

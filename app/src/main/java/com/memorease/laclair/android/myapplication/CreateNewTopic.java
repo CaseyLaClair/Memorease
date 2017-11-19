@@ -67,9 +67,6 @@ public class CreateNewTopic extends AppCompatActivity {
 
     public void createWithCards(View view) {
 
-        //topicTextView = findViewById(R.id.autoCompleteTopics);
-        //subTopicTextView = findViewById(R.id.autoCompleteSubTopic);
-
         String topic = topicTextView.getText().toString().trim();
 
         //If topic and subtopic typed, match the topic and subtopic, ignoring case, display error
@@ -129,7 +126,7 @@ public class CreateNewTopic extends AppCompatActivity {
 
         ContentValues cv = new ContentValues();
         if (TextUtils.isEmpty(topic)) {
-            Toast.makeText(this, "No Topic Entereted", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No Topic Entered", Toast.LENGTH_LONG).show();
         } else {
             cv.put(CardContract.CardEntry.TOPIC, topic);
             tDb.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv);

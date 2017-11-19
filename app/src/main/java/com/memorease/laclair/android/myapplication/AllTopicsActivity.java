@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
@@ -33,9 +34,11 @@ public class AllTopicsActivity extends AppCompatActivity {
         //Set click listener for items in listview.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Method write here for get item position on click and send to topic
-                //activity with the topic chosen.
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+                Intent i = new Intent(AllTopicsActivity.this, SingleTopic.class);
+                i.putExtra("topic", String.valueOf(adapterView.getItemAtPosition(position)));
+                startActivity(i);
             }
         });
     }
@@ -43,6 +46,7 @@ public class AllTopicsActivity extends AppCompatActivity {
     public void sendToCreateNewTopic(View view){
         Intent intent = new Intent(this, CreateNewTopic.class);
         startActivity(intent);
+
     }
 
     public ArrayList<String> getTopicFromDB() {
@@ -77,15 +81,7 @@ public class AllTopicsActivity extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.listViewAllTopics);
         listView.setAdapter(listAdapter);
-
-        //Set click listener for items in listview.
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Method write here for get item position on click and send to topic
-                //activity with the topic chosen.
-            }
-        });
+        
 
     }
 

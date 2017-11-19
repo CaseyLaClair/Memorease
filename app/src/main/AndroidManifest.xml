@@ -16,12 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateCardActivity"/>
+        <activity android:name=".CreateCardActivity" />
         <activity android:name=".AllTopicsActivity" />
         <activity android:name=".TodaysStudyActivity" />
         <activity android:name=".MyScoresActivity" />
         <activity android:name=".TopicScoreActivity" />
-        <activity android:name=".CreateNewTopic"></activity>
+        <activity android:name=".CreateNewTopic" />
+        <activity android:name=".SingleTopic"></activity>
     </application>
 
 </manifest>
