@@ -12,8 +12,7 @@
 
         <TextView
             android:id="@+id/myScoresTitle"
-            style="@style/ActivityTitle"
-            android:text="pass in topic title..." />
+            style="@style/ActivityTitle" />
 
     </RelativeLayout>
 

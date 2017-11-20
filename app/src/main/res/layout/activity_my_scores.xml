@@ -14,12 +14,10 @@
             style="@style/ActivityTitle"
             android:text="@string/my_scores_activity" />
 
-        <ExpandableListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/myScoresTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="64dp" />
+        <ListView
+            android:id="@+id/myScoresListView"
+            style="@style/AllTopicsExpListView"
+            android:layout_below="@id/myScoresTitle"/>
 
 
     </RelativeLayout>
