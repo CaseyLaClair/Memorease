@@ -27,4 +27,5 @@
     <string name="create_new_card">Create New Card</string>
     <string name="delete_all_cards">DELETE ALL CARDS</string>
     <string name="delete_card">Delete Card</string>
+    <string name="flip_card">Flip Card</string>
 </resources>

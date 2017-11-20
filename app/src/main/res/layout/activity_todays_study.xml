@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/topicStudyToday"
-            style="@style/TodaysStudyTopSubtopicText"
+            style="@style/TodaysStudyTopicText"
             android:layout_alignLeft="@+id/questionCardView"
             android:layout_alignStart="@+id/questionCardView"
             android:layout_below="@+id/todaysStudyTitle"

@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/topicStudy"
-            style="@style/TodaysStudyTopSubtopicText"
+            style="@style/TodaysStudyTopicText"
             android:layout_alignLeft="@+id/questionCardView"
             android:layout_alignStart="@+id/questionCardView"
             android:layout_below="@+id/todaysStudyTitle" />
@@ -42,7 +42,8 @@
             android:id="@+id/flipOver"
             style="@style/FlipCardOverButton"
             android:layout_below="@+id/questionCardView"
-            android:text="Flip Card" />
+            android:text="@string/flip_card"
+            android:onClick="flipCard"/>
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -78,7 +79,8 @@
             android:layout_below="@+id/radioGroup"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
-            android:text="@string/next_card" />
+            android:text="@string/next_card"
+            android:onClick="nextCard"/>
 
         <CheckBox
             android:id="@+id/checkBox"

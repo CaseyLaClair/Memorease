@@ -32,7 +32,7 @@ public class SingleTopic extends AppCompatActivity {
 
     public void takeToStudyCards(View view){
         Intent intent = new Intent(this, StudyCards.class);
-        intent.putExtra("topicName", topicTextView.getText());
+        intent.putExtra("topic", topicTextView.getText());
         startActivity(intent);
     }
 
