@@ -53,9 +53,11 @@
             android:layout_below="@+id/flipOver"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
-            android:id="@+id/radioGroup">
+            android:id="@+id/radioGroup"
+            android:checkedButton="@id/incorrectButton">
 
             <RadioButton
+                android:id="@+id/correctButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -63,6 +65,7 @@
                 android:text="@string/correct"/>
 
             <RadioButton
+                android:id="@+id/incorrectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

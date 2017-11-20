@@ -1,11 +1,14 @@
 package com.memorease.laclair.android.myapplication;
 
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
@@ -18,6 +21,8 @@ public class StudyCards extends AppCompatActivity {
     TextView qaTextView;
     String question;
     String answer;
+    RadioButton incorrect;
+    RadioButton correct;
 
 
     @Override
@@ -25,6 +30,8 @@ public class StudyCards extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_cards);
 
+        incorrect = findViewById(R.id.incorrectButton);
+        correct = findViewById(R.id.correctButton);
         topicTextView = findViewById(R.id.topicStudy);
         qaTextView = findViewById(R.id.textView2);
 
@@ -43,7 +50,6 @@ public class StudyCards extends AppCompatActivity {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
-            //cursor.moveToNext();
         } else {
             qaTextView.setText("No Cards Available");
         }
@@ -59,24 +65,39 @@ public class StudyCards extends AppCompatActivity {
 
     }
 
-    public void nextCard(View view) {
+    public void nextCard(View view) throws SQLException{
 
-        //Do something with radio buttons here to increment correct answered
-        //and open writeable version of db to update with increment... maybe
-        //read current value, increment or decrement and then write new value
-        //in it's place.
+        SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
+
+        int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+
+        if(incorrect.isChecked()&&rightOrWrong!=0){
+            rightOrWrong--;
+        }else if(correct.isChecked()&&rightOrWrong<3){
+            rightOrWrong++;
+        }
+
+        String update = "UPDATE "+CardContract.CardEntry.TABLE_NAME+" SET "+CardContract.CardEntry.CORRECT_ANSWERED+
+                " = "+rightOrWrong+" WHERE "+CardContract.CardEntry.QUESTION+" = '"+question+"'";
+        cardWriter.execSQL(update);
+
         if (cursor.moveToNext()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
-            //cursor.moveToNext();
         } else {
             cursor.moveToFirst();
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
-            //cursor.moveToNext();
         }
+        Toast.makeText(StudyCards.this, String.valueOf(rightOrWrong), Toast.LENGTH_LONG).show();
+        cardWriter.close();
+    }
+
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
