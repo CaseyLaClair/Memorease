@@ -22,7 +22,8 @@
         <activity android:name=".MyScoresActivity" />
         <activity android:name=".TopicScoreActivity" />
         <activity android:name=".CreateNewTopic" />
-        <activity android:name=".SingleTopic"></activity>
+        <activity android:name=".SingleTopic" />
+        <activity android:name=".StudyCards"></activity>
     </application>
 
 </manifest>
