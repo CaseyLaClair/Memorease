@@ -1,11 +1,13 @@
 package com.memorease.laclair.android.myapplication;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ public class StudyCards extends AppCompatActivity {
     String answer;
     RadioButton incorrect;
     RadioButton correct;
+    CheckBox delete;
 
 
     @Override
@@ -30,10 +33,12 @@ public class StudyCards extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_cards);
 
+        SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
         incorrect = findViewById(R.id.incorrectButton);
         correct = findViewById(R.id.correctButton);
         topicTextView = findViewById(R.id.topicStudy);
         qaTextView = findViewById(R.id.textView2);
+        delete = findViewById(R.id.checkBox);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -44,7 +49,7 @@ public class StudyCards extends AppCompatActivity {
 
         String topic = (String) topicTextView.getText();
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";";
-        cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
+        cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
@@ -65,34 +70,44 @@ public class StudyCards extends AppCompatActivity {
 
     }
 
-    public void nextCard(View view) throws SQLException{
+    public void nextCard(View view) throws SQLException {
 
         SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
 
-        int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+        if (delete.isChecked()) {
+            cardWriter.delete(CardContract.CardEntry.TABLE_NAME,"question=? and answer=?",new String[]{question,answer});
+            delete.setChecked(false);
+            checkMoveToNext();
+        } else {
+            int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-        if(incorrect.isChecked()&&rightOrWrong!=0){
-            rightOrWrong--;
-        }else if(correct.isChecked()&&rightOrWrong<3){
-            rightOrWrong++;
+            if (incorrect.isChecked() && rightOrWrong != 0) {
+                rightOrWrong--;
+            } else if (correct.isChecked() && rightOrWrong < 3) {
+                rightOrWrong++;
+            }
+
+            String update = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.CORRECT_ANSWERED +
+                    " = " + rightOrWrong + " WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
+            cardWriter.execSQL(update);
+
+            checkMoveToNext();
         }
+        cardWriter.close();
+    }
 
-        String update = "UPDATE "+CardContract.CardEntry.TABLE_NAME+" SET "+CardContract.CardEntry.CORRECT_ANSWERED+
-                " = "+rightOrWrong+" WHERE "+CardContract.CardEntry.QUESTION+" = '"+question+"'";
-        cardWriter.execSQL(update);
-
+    public void checkMoveToNext(){
         if (cursor.moveToNext()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
+            incorrect.setChecked(true);
         } else {
-            cursor.moveToFirst();
-            question = cursor.getString(cursor.getColumnIndex("question"));
-            answer = cursor.getString(cursor.getColumnIndex("answer"));
-            qaTextView.setText(question);
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
         }
-        Toast.makeText(StudyCards.this, String.valueOf(rightOrWrong), Toast.LENGTH_LONG).show();
-        cardWriter.close();
     }
 
     protected void onResume() {
