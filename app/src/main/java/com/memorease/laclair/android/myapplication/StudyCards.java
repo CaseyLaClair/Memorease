@@ -87,7 +87,7 @@ public class StudyCards extends AppCompatActivity {
 
             if (incorrect.isChecked() && rightOrWrong != 0) {
                 rightOrWrong--;
-            } else if (correct.isChecked() && rightOrWrong < 3) {
+            } else if (correct.isChecked() && rightOrWrong < 4) {
                 rightOrWrong++;
             }
 

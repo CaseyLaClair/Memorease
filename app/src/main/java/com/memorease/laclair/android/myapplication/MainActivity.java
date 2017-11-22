@@ -36,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /**
+         * Put all of this in onResume too! Incase user never closes app
+         * and comes back to it a day later!!!!!!!!!
+         */
+        boolean flag = false;
         Calendar current = Calendar.getInstance();
         daysCurrent = (current.getTimeInMillis()/(24*60*60*1000));
 
@@ -46,24 +51,83 @@ public class MainActivity extends AppCompatActivity {
         cursor = dbReader.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
+            String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
             startDate = cursor.getString(cursor.getColumnIndex("studydate"));
+            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                Date myDate = format.parse(startDate);
+                Date myDate = currentFormat.parse(startDate);
                 milliStart = myDate.getTime();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
             daysStart = (milliStart/(24*60*60*1000));
-            
 
+            int days = (int)(daysCurrent-daysStart);
+            flag = studyCheck(days, correctAnswered);
+
+            if(flag == true){
+                String dateCreated = currentFormat.format(current.getTime());
+                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                        " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                        " = 1 WHERE " + CardContract.CardEntry._ID+ " = '" + id + "'";
+
+                dbWriter.execSQL(updateDate);
+                dbWriter.execSQL(updateStudy);
+            }
+
+        }else if(cursor.moveToNext()){
+            String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
+            startDate = cursor.getString(cursor.getColumnIndex("studydate"));
+            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+
+            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date myDate = currentFormat.parse(startDate);
+                milliStart = myDate.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            daysStart = (milliStart/(24*60*60*1000));
+
+            int days = (int)(daysCurrent-daysStart);
+            flag = studyCheck(days, correctAnswered);
+
+            if(flag == true){
+                String dateCreated = currentFormat.format(current.getTime());
+                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                        " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                        " = 1 WHERE " + CardContract.CardEntry._ID+ " = '" + id + "'";
+
+                dbWriter.execSQL(updateDate);
+                dbWriter.execSQL(updateStudy);
+            }
         }
+    }
 
+    public boolean studyCheck(int days, int correct){
+        boolean value = false;
 
+            if(correct == 0 && days!=0){
+                value = true;
+            }
+            else if (correct == 1 && days>1){
+                value = true;
+            }
+            else if (correct == 2 && days>4){
+                value = true;
+            }
+            else if (correct == 3 && days>11){
+                value = true;
+            }
+            else if (correct == 4 && days%27==0){
+                value = true;
+            }
 
-
+        return value;
     }
 
     // Sends user to CreateCardActivity.
