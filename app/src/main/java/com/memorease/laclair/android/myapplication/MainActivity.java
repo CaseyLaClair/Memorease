@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
          * Put all of this in onResume too! Incase user never closes app
          * and comes back to it a day later!!!!!!!!!
          */
-        boolean flag = false;
+        boolean flag;
         Calendar current = Calendar.getInstance();
         daysCurrent = (current.getTimeInMillis() / (24 * 60 * 60 * 1000));
 
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (cursor ==null) {
             if (cursor.moveToFirst()) {
-                String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
+                int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
                 startDate = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.STUDY_DATE));
                 correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
@@ -69,16 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 if (flag == true) {
                     String dateCreated = currentFormat.format(current.getTime());
                     String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                            " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                            " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
                     String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                            " = 1 WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                            " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
 
                     dbWriter.execSQL(updateDate);
                     dbWriter.execSQL(updateStudy);
                 }
 
             } else if (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
+                int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
                 startDate = cursor.getString(cursor.getColumnIndex("studydate"));
                 correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
@@ -97,16 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 if (flag == true) {
                     String dateCreated = currentFormat.format(current.getTime());
                     String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                            " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                            " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
                     String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                            " = 1 WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                            " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
 
                     dbWriter.execSQL(updateDate);
                     dbWriter.execSQL(updateStudy);
                 }
             }
         }
-        cursor.close();
         dbReader.close();
         dbWriter.close();
     }
@@ -157,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cardsDbHelper.close();
+        cursor.close();
     }
 }
 

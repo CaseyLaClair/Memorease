@@ -26,6 +26,7 @@ public class StudyCards extends AppCompatActivity {
     RadioButton incorrect;
     RadioButton correct;
     CheckBox delete;
+    int rightOrWrong;
 
 
     @Override
@@ -34,6 +35,7 @@ public class StudyCards extends AppCompatActivity {
         setContentView(R.layout.activity_study_cards);
 
         SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
+
         incorrect = findViewById(R.id.incorrectButton);
         correct = findViewById(R.id.correctButton);
         topicTextView = findViewById(R.id.topicStudy);
@@ -84,7 +86,7 @@ public class StudyCards extends AppCompatActivity {
             delete.setChecked(false);
             checkMoveToNext();
         } else {
-            int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+            rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
             if (incorrect.isChecked() && rightOrWrong != 0) {
                 rightOrWrong--;
             } else if (correct.isChecked() && rightOrWrong < 4) {

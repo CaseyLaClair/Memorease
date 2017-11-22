@@ -31,6 +31,7 @@ public class AllTopicsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_topics);
 
+
         //Create an array list of all topics
         ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
         ListAdapter listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, topics);

@@ -14,7 +14,7 @@ public class TopicScoreActivity extends AppCompatActivity {
 
     private TextView topicTextView;
     private TextView totalText, proficientText, goodText, okText, needsWorkText;
-    int proficient, good, ok, needsWork, answerValue, totalValue;
+    int proficient, good, ok, needsWork, answerValue, totalValue =0;
     Cursor cursor;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
 
@@ -22,13 +22,6 @@ public class TopicScoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_score_activity);
-
-        //Init all to zero
-        proficient = 0;
-        good = 0;
-        ok = 0;
-        needsWork = 0;
-        totalValue = 0;
 
         totalText = findViewById(R.id.totalCards);
         proficientText = findViewById(R.id.proficient);
@@ -80,7 +73,7 @@ public class TopicScoreActivity extends AppCompatActivity {
         int percentage;
 
         if(total!=0){
-            percentage = (int)((amount/total)*100);
+            percentage = ((amount/total)*100);
             temp = String.valueOf(percentage);
             str = temp+"%";
         }

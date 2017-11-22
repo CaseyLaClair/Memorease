@@ -123,9 +123,9 @@ public class CreateCardActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         cardsDbHelper.close();
         topicsDbHelper.close();
-        super.onDestroy();
     }
 }
 
