@@ -57,15 +57,6 @@
 
         </RelativeLayout>
 
-        <!--
-        <Button
-            android:id="@+id/datePicker"
-            style="@style/BasicButton"
-            android:layout_below="@id/answerCardView"
-            android:hint="@string/date_to_learn"
-            android:inputType="date" />
-         -->
-
         <Button
             android:id="@+id/submitButton"
             style="@style/BasicButton"

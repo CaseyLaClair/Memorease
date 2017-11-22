@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
+import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
 public class SingleTopic extends AppCompatActivity {
 
@@ -47,12 +48,20 @@ public class SingleTopic extends AppCompatActivity {
         String topic = (String) topicTextView.getText();
 
         CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+        TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+
         SQLiteDatabase cards = cardsDbHelper.getWritableDatabase();
+        SQLiteDatabase topics = topicsDbHelper.getWritableDatabase();
 
         cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME+" WHERE topic LIKE \"%"+topic+"%\";");
+        topics.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME_2+" WHERE topic LIKE \"%"+topic+"%\";");
 
+        topicsDbHelper.close();
         cardsDbHelper.close();
 
-        Toast.makeText(SingleTopic.this, "All Cards Deleted", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, AllTopicsActivity.class);
+        startActivity(intent);
+
+        //Toast.makeText(SingleTopic.this, "All Cards Deleted", Toast.LENGTH_LONG).show();
     }
 }

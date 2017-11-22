@@ -13,6 +13,10 @@ import android.widget.TextView;
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class TodaysStudyActivity extends AppCompatActivity {
 
     TextView topicTextView;
@@ -46,7 +50,9 @@ public class TodaysStudyActivity extends AppCompatActivity {
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
         } else {
-            qaTextView.setText("No Cards Available");
+            question = "No Cards Available";
+            answer = "Nothing On This Side Either";
+            qaTextView.setText(question);
         }
     }
 
@@ -64,11 +70,17 @@ public class TodaysStudyActivity extends AppCompatActivity {
 
         SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
 
+        if(qaTextView.getText().equals("No Cards Available"))
+            return;
+
         if (delete.isChecked()) {
-            cardWriter.delete(CardContract.CardEntry.TABLE_NAME,"question=? and answer=?",new String[]{question,answer});
+            cardWriter.delete(CardContract.CardEntry.TABLE_NAME, "question=? and answer=?", new String[]{question, answer});
             delete.setChecked(false);
             checkMoveToNext();
         } else {
+            Calendar current = Calendar.getInstance();
+            DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String studyDate = currentFormat.format(current.getTime());
             int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
             if (incorrect.isChecked() && rightOrWrong != 0) {
@@ -80,17 +92,22 @@ public class TodaysStudyActivity extends AppCompatActivity {
             String update = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.CORRECT_ANSWERED +
                     " = " + rightOrWrong + " WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
 
-            String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME+ " SET "+ CardContract.CardEntry.STUDY_TODAY+
-                    " = 0 WHERE "+ CardContract.CardEntry.QUESTION+ " = '"+question+"'";
+            String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                    " = 0 WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
+
+            String updateDate = "UPDATE " + CardContract.CardEntry.STUDY_DATE + " SET " + CardContract.CardEntry.STUDY_DATE +
+                    " = " + studyDate + " WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
+
             cardWriter.execSQL(update);
             cardWriter.execSQL(updateStudy);
+            cardWriter.execSQL(updateDate);
 
             checkMoveToNext();
         }
         cardWriter.close();
     }
 
-    public void checkMoveToNext(){
+    public void checkMoveToNext() {
         if (cursor.moveToNext()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));

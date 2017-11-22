@@ -1,22 +1,13 @@
 package com.memorease.laclair.android.myapplication;
 
-import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.nfc.Tag;
-import android.os.Message;
-import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,24 +18,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * This class creates an instance to be used for activity_create_card
+ */
 public class CreateCardActivity extends AppCompatActivity {
 
-    private Button dateButton;
+    //Declare all vars and open Dbs
     private AutoCompleteTextView topicTextView;
-    private int year, month, day;
-    private DatePickerDialog.OnDateSetListener datePickerListener;
-
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
     TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
 
-
+    /**
+     * onCreate method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
 
+        //Init textview
         topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
 
+        //Get extras if info is being passed from a separate activity.
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String topicPassed = extras.getString("topicName");
@@ -52,50 +48,16 @@ public class CreateCardActivity extends AppCompatActivity {
             topicTextView.setText(topicPassed);
         }
 
+        //Fill array list of all topics to display as autocomplete text
         ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
         topicTextView.setAdapter(adapter);
-
-        //showDialogOnClick();
-
-
     }
 
     /**
-    public void showDialogOnClick() {
-
-        dateButton = (Button) findViewById(R.id.datePicker);
-
-
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                year = cal.get(Calendar.YEAR);
-                month = cal.get(Calendar.MONTH);
-                day = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dateDialog = new DatePickerDialog(CreateCardActivity.this,
-                        android.R.style.Theme_DeviceDefault_Dialog, datePickerListener, year, month, day);
-                dateDialog.show();
-            }
-        });
-
-        datePickerListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year_x, int monthOfYear, int dayOfMonth) {
-                year = year_x;
-                month = monthOfYear + 1;
-                day = dayOfMonth;
-
-                String date = month + " / " + day + " / " + year;
-                Toast.makeText(CreateCardActivity.this, date, Toast.LENGTH_LONG).show();
-            }
-        };
-    }
-    */
-
-
+     * This method gets all topic values from the Db and fills an array
+     * @return ArrayList of topics
+     */
     public ArrayList<String> getTopicFromDB() {
 
         ArrayList<String> topics = new ArrayList<>();
@@ -137,14 +99,6 @@ public class CreateCardActivity extends AppCompatActivity {
         DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateCreated = currentFormat.format(current.getTime());
 
-        /**
-        Calendar learnBy = Calendar.getInstance();
-        DateFormat learnByFormat = new SimpleDateFormat("yyyy-MM-dd");
-        learnBy.set(year, month, day);
-        String learnByDate = learnByFormat.format(learnBy.getTime());
-         */
-
-
         ContentValues cv = new ContentValues();
         cv.put(CardContract.CardEntry.TOPIC, topic);
         cv.put(CardContract.CardEntry.QUESTION, question);
@@ -164,9 +118,6 @@ public class CreateCardActivity extends AppCompatActivity {
         answerText.getText().clear();
 
         Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
-        //Toast.makeText(CreateCardActivity.this, dateCreated, Toast.LENGTH_LONG).show();
-        //Toast.makeText(CreateCardActivity.this, learnByDate, Toast.LENGTH_LONG).show();
-
     }
 
     @Override

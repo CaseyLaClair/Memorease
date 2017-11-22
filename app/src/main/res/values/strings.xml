@@ -28,4 +28,5 @@
     <string name="delete_all_cards">DELETE ALL CARDS</string>
     <string name="delete_card">Delete Card</string>
     <string name="flip_card">Flip Card</string>
+    <string name="delete_topic_and_cards">Delete Topic and Cards</string>
 </resources>

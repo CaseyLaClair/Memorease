@@ -56,7 +56,9 @@ public class StudyCards extends AppCompatActivity {
             answer = cursor.getString(cursor.getColumnIndex("answer"));
             qaTextView.setText(question);
         } else {
-            qaTextView.setText("No Cards Available");
+            question = "No Cards Available";
+            answer = "Nothing On This Side Either";
+            qaTextView.setText(question);
         }
     }
 
@@ -74,6 +76,8 @@ public class StudyCards extends AppCompatActivity {
 
         SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
 
+        if(qaTextView.getText().equals("No Cards Available"))
+            return;
         if (delete.isChecked()) {
             cardWriter.delete(CardContract.CardEntry.TABLE_NAME,"question=? and answer=?",new String[]{question,answer});
             delete.setChecked(false);
@@ -112,6 +116,10 @@ public class StudyCards extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
+        SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
+        String topic = (String) topicTextView.getText();
+        String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";";
+        cursor = db.rawQuery(query, null);
 
     }
 

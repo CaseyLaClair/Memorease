@@ -44,7 +44,7 @@
             android:id="@+id/deleteAllCards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/delete_all_cards"
+            android:text="@string/delete_topic_and_cards"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginTop="18dp"
