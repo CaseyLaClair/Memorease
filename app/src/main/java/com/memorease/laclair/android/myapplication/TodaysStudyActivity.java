@@ -120,4 +120,11 @@ public class TodaysStudyActivity extends AppCompatActivity {
             overridePendingTransition(0, 0);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        cardsDbHelper.close();
+    }
 }

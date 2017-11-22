@@ -14,6 +14,41 @@
             android:id="@+id/myScoresTitle"
             style="@style/ActivityTitle" />
 
+        <TextView
+            android:id="@+id/totalCards"
+            android:layout_below="@id/myScoresTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="28dp"/>
+
+        <TextView
+            android:id="@+id/proficient"
+            android:layout_below="@id/totalCards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="28dp"/>
+
+        <TextView
+            android:id="@+id/good"
+            android:layout_below="@id/proficient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="28dp"/>
+
+        <TextView
+            android:id="@+id/ok"
+            android:layout_below="@id/good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="28dp"/>
+
+        <TextView
+            android:id="@+id/needsWork"
+            android:layout_below="@id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="28dp"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
