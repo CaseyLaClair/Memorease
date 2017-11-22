@@ -1,5 +1,6 @@
 package com.memorease.laclair.android.myapplication;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class TopicScoreActivity extends AppCompatActivity {
         totalText = findViewById(R.id.totalCards);
         proficientText = findViewById(R.id.proficient);
         goodText = findViewById(R.id.good);
-        okText = findViewById(R.id.good);
+        okText = findViewById(R.id.ok);
         needsWorkText = findViewById(R.id.needsWork);
 
         topicTextView = findViewById(R.id.myScoresTitle);
@@ -70,17 +71,21 @@ public class TopicScoreActivity extends AppCompatActivity {
         okText.setText("Ok (1/3): "+getPercentage(totalValue,ok));
         needsWorkText.setText("Needs Work (0/3): "+getPercentage(totalValue,needsWork));
 
-
+        cardReader.close();
     }
 
     public String getPercentage(int total, int amount){
         String str;
         String temp;
-        double percentage;
+        int percentage;
 
-        percentage = (double)(amount/total);
-        temp = String.valueOf(percentage);
-        str = temp+"%";
+        if(total!=0){
+            percentage = (int)((amount/total)*100);
+            temp = String.valueOf(percentage);
+            str = temp+"%";
+        }
+        else
+            str = "No Cards";
 
         return str;
     }
@@ -98,6 +103,11 @@ public class TopicScoreActivity extends AppCompatActivity {
             default:
                 needsWork++;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

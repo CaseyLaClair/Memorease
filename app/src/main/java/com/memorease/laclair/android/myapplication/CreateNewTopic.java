@@ -69,10 +69,8 @@ public class CreateNewTopic extends AppCompatActivity {
                 }
 
             } while (cursor.moveToNext());
-
-            cursor.close();
         }
-
+        cursor.close();
         return flag;
     }
 
@@ -100,6 +98,7 @@ public class CreateNewTopic extends AppCompatActivity {
         }
 
         topicTextView.getText().clear();
+        tDb.close();
     }
 
     @Override

@@ -61,7 +61,6 @@ public class SingleTopic extends AppCompatActivity {
 
         Intent intent = new Intent(this, AllTopicsActivity.class);
         startActivity(intent);
-
         //Toast.makeText(SingleTopic.this, "All Cards Deleted", Toast.LENGTH_LONG).show();
     }
 }

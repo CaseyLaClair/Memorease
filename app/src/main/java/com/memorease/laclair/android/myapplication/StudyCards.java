@@ -78,13 +78,13 @@ public class StudyCards extends AppCompatActivity {
 
         if(qaTextView.getText().equals("No Cards Available"))
             return;
+
         if (delete.isChecked()) {
             cardWriter.delete(CardContract.CardEntry.TABLE_NAME,"question=? and answer=?",new String[]{question,answer});
             delete.setChecked(false);
             checkMoveToNext();
         } else {
             int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
-
             if (incorrect.isChecked() && rightOrWrong != 0) {
                 rightOrWrong--;
             } else if (correct.isChecked() && rightOrWrong < 4) {
@@ -120,7 +120,6 @@ public class StudyCards extends AppCompatActivity {
         String topic = (String) topicTextView.getText();
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";";
         cursor = db.rawQuery(query, null);
-
     }
 
     @Override

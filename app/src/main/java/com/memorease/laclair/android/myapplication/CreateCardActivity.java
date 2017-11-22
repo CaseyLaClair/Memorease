@@ -74,10 +74,8 @@ public class CreateCardActivity extends AppCompatActivity {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
                 }
             } while (cursor.moveToNext());
-
-            cursor.close();
         }
-
+        cursor.close();
         return topics;
     }
 
@@ -116,6 +114,9 @@ public class CreateCardActivity extends AppCompatActivity {
 
         questionText.getText().clear();
         answerText.getText().clear();
+
+        db.close();
+        tDb.close();
 
         Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
     }

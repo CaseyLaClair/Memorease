@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
     long daysCurrent;
     long milliStart;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
          */
         boolean flag = false;
         Calendar current = Calendar.getInstance();
-        daysCurrent = (current.getTimeInMillis()/(24*60*60*1000));
+        daysCurrent = (current.getTimeInMillis() / (24 * 60 * 60 * 1000));
 
         SQLiteDatabase dbReader = cardsDbHelper.getReadableDatabase();
         SQLiteDatabase dbWriter = cardsDbHelper.getWritableDatabase();
@@ -50,108 +48,115 @@ public class MainActivity extends AppCompatActivity {
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + ";";
         cursor = dbReader.rawQuery(query, null);
 
-        if (cursor.moveToFirst()) {
-            String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
-            startDate = cursor.getString(cursor.getColumnIndex("studydate"));
-            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+        if (cursor ==null) {
+            if (cursor.moveToFirst()) {
+                String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
+                startDate = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.STUDY_DATE));
+                correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date myDate = currentFormat.parse(startDate);
-                milliStart = myDate.getTime();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            daysStart = (milliStart/(24*60*60*1000));
+                SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date myDate = currentFormat.parse(startDate);
+                    milliStart = myDate.getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                daysStart = (milliStart / (24 * 60 * 60 * 1000));
 
-            int days = (int)(daysCurrent-daysStart);
-            flag = studyCheck(days, correctAnswered);
+                int days = (int) (daysCurrent - daysStart);
+                flag = studyCheck(days, correctAnswered);
 
-            if(flag == true){
-                String dateCreated = currentFormat.format(current.getTime());
-                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                        " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
-                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                        " = 1 WHERE " + CardContract.CardEntry._ID+ " = '" + id + "'";
+                if (flag == true) {
+                    String dateCreated = currentFormat.format(current.getTime());
+                    String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                            " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                    String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                            " = 1 WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
 
-                dbWriter.execSQL(updateDate);
-                dbWriter.execSQL(updateStudy);
-            }
+                    dbWriter.execSQL(updateDate);
+                    dbWriter.execSQL(updateStudy);
+                }
 
-        }else if(cursor.moveToNext()){
-            String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
-            startDate = cursor.getString(cursor.getColumnIndex("studydate"));
-            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+            } else if (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry._ID));
+                startDate = cursor.getString(cursor.getColumnIndex("studydate"));
+                correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date myDate = currentFormat.parse(startDate);
-                milliStart = myDate.getTime();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            daysStart = (milliStart/(24*60*60*1000));
+                SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date myDate = currentFormat.parse(startDate);
+                    milliStart = myDate.getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                daysStart = (milliStart / (24 * 60 * 60 * 1000));
 
-            int days = (int)(daysCurrent-daysStart);
-            flag = studyCheck(days, correctAnswered);
+                int days = (int) (daysCurrent - daysStart);
+                flag = studyCheck(days, correctAnswered);
 
-            if(flag == true){
-                String dateCreated = currentFormat.format(current.getTime());
-                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                        " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
-                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                        " = 1 WHERE " + CardContract.CardEntry._ID+ " = '" + id + "'";
+                if (flag == true) {
+                    String dateCreated = currentFormat.format(current.getTime());
+                    String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                            " = " + dateCreated + " WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
+                    String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                            " = 1 WHERE " + CardContract.CardEntry._ID + " = '" + id + "'";
 
-                dbWriter.execSQL(updateDate);
-                dbWriter.execSQL(updateStudy);
+                    dbWriter.execSQL(updateDate);
+                    dbWriter.execSQL(updateStudy);
+                }
             }
         }
+        cursor.close();
+        dbReader.close();
+        dbWriter.close();
     }
 
-    public boolean studyCheck(int days, int correct){
+    public boolean studyCheck(int days, int correct) {
         boolean value = false;
 
-            if(correct == 0 && days!=0){
-                value = true;
-            }
-            else if (correct == 1 && days>1){
-                value = true;
-            }
-            else if (correct == 2 && days>4){
-                value = true;
-            }
-            else if (correct == 3 && days>11){
-                value = true;
-            }
-            else if (correct == 4 && days%27==0){
-                value = true;
-            }
+        if (correct == 0 && days != 0) {
+            value = true;
+        } else if (correct == 1 && days > 1) {
+            value = true;
+        } else if (correct == 2 && days > 4) {
+            value = true;
+        } else if (correct == 3 && days > 11) {
+            value = true;
+        } else if (correct == 4 && days % 27 == 0) {
+            value = true;
+        }
 
         return value;
     }
 
     // Sends user to CreateCardActivity.
-    public void sendToCreateCardActivity(View view){
+    public void sendToCreateCardActivity(View view) {
         Intent intent = new Intent(this, CreateCardActivity.class);
         startActivity(intent);
     }
 
     // Sends user to AllTopicsActivity.
-    public void sendToAllTopicsActivity(View view){
+    public void sendToAllTopicsActivity(View view) {
         Intent intent = new Intent(this, AllTopicsActivity.class);
         startActivity(intent);
     }
 
     // Sends user to TodaysStudyActivity.
-    public void sendToTodaysStudyActivity(View view){
+    public void sendToTodaysStudyActivity(View view) {
         Intent intent = new Intent(this, TodaysStudyActivity.class);
         startActivity(intent);
     }
 
     // Sends user to MyScoresActivity.
-    public void sendToMyScoresActivity(View view){
+    public void sendToMyScoresActivity(View view) {
         Intent intent = new Intent(this, MyScoresActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cardsDbHelper.close();
     }
 }
 

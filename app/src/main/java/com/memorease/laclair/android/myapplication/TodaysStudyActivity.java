@@ -54,6 +54,7 @@ public class TodaysStudyActivity extends AppCompatActivity {
             answer = "Nothing On This Side Either";
             qaTextView.setText(question);
         }
+        db.close();
     }
 
     public void flipCardStudy(View view) {
@@ -81,6 +82,7 @@ public class TodaysStudyActivity extends AppCompatActivity {
             Calendar current = Calendar.getInstance();
             DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
             String studyDate = currentFormat.format(current.getTime());
+
             int rightOrWrong = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
             if (incorrect.isChecked() && rightOrWrong != 0) {

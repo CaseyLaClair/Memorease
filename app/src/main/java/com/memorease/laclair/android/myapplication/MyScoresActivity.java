@@ -57,10 +57,14 @@ public class MyScoresActivity extends AppCompatActivity {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
                 }
             } while (cursor.moveToNext());
-
-            cursor.close();
         }
-
+        cursor.close();
         return topics;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        topicsDbHelper.close();
     }
 }
