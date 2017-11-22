@@ -56,11 +56,12 @@ public class CreateCardActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, topics);
         topicTextView.setAdapter(adapter);
 
-        showDialogOnClick();
+        //showDialogOnClick();
 
 
     }
 
+    /**
     public void showDialogOnClick() {
 
         dateButton = (Button) findViewById(R.id.datePicker);
@@ -92,6 +93,7 @@ public class CreateCardActivity extends AppCompatActivity {
             }
         };
     }
+    */
 
 
     public ArrayList<String> getTopicFromDB() {
@@ -135,20 +137,20 @@ public class CreateCardActivity extends AppCompatActivity {
         DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateCreated = currentFormat.format(current.getTime());
 
+        /**
         Calendar learnBy = Calendar.getInstance();
         DateFormat learnByFormat = new SimpleDateFormat("yyyy-MM-dd");
         learnBy.set(year, month, day);
         String learnByDate = learnByFormat.format(learnBy.getTime());
+         */
 
 
         ContentValues cv = new ContentValues();
         cv.put(CardContract.CardEntry.TOPIC, topic);
         cv.put(CardContract.CardEntry.QUESTION, question);
         cv.put(CardContract.CardEntry.ANSWER, answer);
-        cv.put(CardContract.CardEntry.DATE_CREATED, dateCreated);
-        cv.put(CardContract.CardEntry.LEARN_BY_DATE, learnByDate);
+        cv.put(CardContract.CardEntry.STUDY_DATE, dateCreated);
         cv.put(CardContract.CardEntry.CORRECT_ANSWERED, 0);
-        cv.put(CardContract.CardEntry.DAYS_COUNTER, 0);
         cv.put(CardContract.CardEntry.STUDY_TODAY, 0);
 
         db.insert(CardContract.CardEntry.TABLE_NAME, null, cv);

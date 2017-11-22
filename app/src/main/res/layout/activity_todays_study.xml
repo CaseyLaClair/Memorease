@@ -32,7 +32,7 @@
             <android.support.v7.widget.CardView style="@style/CardViewForCreateCardActivity">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/textView4"
                     style="@style/TextViewForCardView" />
 
             </android.support.v7.widget.CardView>
@@ -43,7 +43,8 @@
             android:id="@+id/flipOver"
             style="@style/FlipCardOverButton"
             android:layout_below="@+id/questionCardView"
-            android:text="Flip Card" />
+            android:text="Flip Card"
+            android:onClick="flipCardStudy"/>
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -60,18 +61,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="16dp"
-                android:text="@string/correct"/>
+                android:text="@string/correct"
+                android:id="@+id/correct2"/>
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="16dp"
-                android:text="@string/incorrect"/>
+                android:text="@string/incorrect"
+                android:id="@+id/incorrect2"/>
         </RadioGroup>
 
         <Button
-            android:id="@+id/nextCard"
+            android:id="@+id/nextCard2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
@@ -79,7 +82,18 @@
             android:layout_below="@+id/radioGroup"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="18dp"
+            android:onClick="nextCardStudy"
             android:text="@string/next_card" />
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nextCard2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:textSize="18sp"
+            android:text="@string/delete_card" />
 
 
     </RelativeLayout>

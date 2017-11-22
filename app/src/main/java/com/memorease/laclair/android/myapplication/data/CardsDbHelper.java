@@ -17,10 +17,8 @@ public class CardsDbHelper extends SQLiteOpenHelper {
                     CardEntry.TOPIC + " TEXT NOT NULL," +
                     CardEntry.QUESTION + " TEXT NOT NULL," +
                     CardEntry.ANSWER + " TEXT NOT NULL," +
-                    CardEntry.DATE_CREATED + " TEXT NOT NULL," +
-                    CardEntry.LEARN_BY_DATE + " TEXT NOT NULL," +
+                    CardEntry.STUDY_DATE + " TEXT NOT NULL," +
                     CardEntry.CORRECT_ANSWERED + " INTEGER DEFAULT 0," +
-                    CardEntry.DAYS_COUNTER + " INTEGER DEFAULT 0," +
                     CardEntry.STUDY_TODAY + " INTEGER DEFAULT 0);";
 
     private static final String SQL_DELETE_ENTRIES =
