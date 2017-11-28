@@ -21,6 +21,8 @@ public class TodaysStudyActivity extends AppCompatActivity {
 
     TextView topicTextView;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    SQLiteDatabase db;
+    SQLiteDatabase cardWriter;
     Cursor cursor;
     TextView qaTextView;
     String question;
@@ -34,7 +36,9 @@ public class TodaysStudyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todays_study);
 
-        SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
+        db = cardsDbHelper.getReadableDatabase();
+        cardWriter = cardsDbHelper.getWritableDatabase();
+
         incorrect = findViewById(R.id.incorrect2);
         correct = findViewById(R.id.correct2);
         topicTextView = findViewById(R.id.topicStudyToday);
@@ -54,7 +58,6 @@ public class TodaysStudyActivity extends AppCompatActivity {
             answer = "Nothing On This Side Either";
             qaTextView.setText(question);
         }
-        db.close();
     }
 
     public void flipCardStudy(View view) {
@@ -68,8 +71,6 @@ public class TodaysStudyActivity extends AppCompatActivity {
     }
 
     public void nextCardStudy(View view) throws SQLException {
-
-        SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
 
         if(qaTextView.getText().equals("No Cards Available"))
             return;
@@ -106,7 +107,6 @@ public class TodaysStudyActivity extends AppCompatActivity {
 
             checkMoveToNext();
         }
-        cardWriter.close();
     }
 
     public void checkMoveToNext() {
@@ -124,9 +124,28 @@ public class TodaysStudyActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (db.isOpen()){
+            db.close();
+        }
+        if(cardWriter.isOpen()){
+            cardWriter.close();
+        }
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
+        cardsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        cursor.close();
-        cardsDbHelper.close();
     }
 }

@@ -27,6 +27,9 @@ public class CreateCardActivity extends AppCompatActivity {
     private AutoCompleteTextView topicTextView;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
     TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+    SQLiteDatabase db;
+    SQLiteDatabase tDb;
+    Cursor cursor;
 
     /**
      * onCreate method
@@ -36,6 +39,9 @@ public class CreateCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
+
+        db = cardsDbHelper.getWritableDatabase();
+        tDb = topicsDbHelper.getWritableDatabase();
 
         //Init textview
         topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
@@ -62,7 +68,7 @@ public class CreateCardActivity extends AppCompatActivity {
 
         ArrayList<String> topics = new ArrayList<>();
         String query = "SELECT topic FROM topics";
-        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+        cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -75,14 +81,10 @@ public class CreateCardActivity extends AppCompatActivity {
                 }
             } while (cursor.moveToNext());
         }
-        cursor.close();
         return topics;
     }
 
     public void createCardOnDone(View view) {
-
-        SQLiteDatabase db = cardsDbHelper.getWritableDatabase();
-        SQLiteDatabase tDb = topicsDbHelper.getWritableDatabase();
 
         EditText acTopicText = findViewById(R.id.autoCompleteTextViewTopics);
         String topic = acTopicText.getText().toString().trim();
@@ -115,17 +117,34 @@ public class CreateCardActivity extends AppCompatActivity {
         questionText.getText().clear();
         answerText.getText().clear();
 
-        db.close();
-        tDb.close();
-
         Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!cursor.isClosed()){
+            cursor.close();
+        }
+        if (db.isOpen()){
+            db.close();
+        }
+        if (tDb.isOpen()){
+            tDb.close();
+        }
+        cardsDbHelper.close();
+        topicsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cardsDbHelper.close();
-        topicsDbHelper.close();
     }
 }
 

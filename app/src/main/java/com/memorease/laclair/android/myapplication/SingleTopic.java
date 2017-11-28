@@ -14,12 +14,20 @@ import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
 public class SingleTopic extends AppCompatActivity {
 
+    CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+    SQLiteDatabase cards;
+    SQLiteDatabase topics;
+
     private TextView topicTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_topic);
+
+        cards = cardsDbHelper.getWritableDatabase();
+        topics = topicsDbHelper.getWritableDatabase();
 
         topicTextView = findViewById(R.id.topicTop);
 
@@ -47,20 +55,34 @@ public class SingleTopic extends AppCompatActivity {
 
         String topic = (String) topicTextView.getText();
 
-        CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
-        TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
-
-        SQLiteDatabase cards = cardsDbHelper.getWritableDatabase();
-        SQLiteDatabase topics = topicsDbHelper.getWritableDatabase();
-
         cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME+" WHERE topic LIKE \"%"+topic+"%\";");
         topics.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME_2+" WHERE topic LIKE \"%"+topic+"%\";");
 
-        topicsDbHelper.close();
-        cardsDbHelper.close();
-
         Intent intent = new Intent(this, AllTopicsActivity.class);
         startActivity(intent);
-        //Toast.makeText(SingleTopic.this, "All Cards Deleted", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (cards.isOpen()){
+            cards.close();
+        }
+        if (topics.isOpen()){
+            topics.close();
+        }
+        cardsDbHelper.close();
+        topicsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

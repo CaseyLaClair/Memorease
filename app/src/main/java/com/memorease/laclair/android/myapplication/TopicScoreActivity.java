@@ -14,9 +14,10 @@ public class TopicScoreActivity extends AppCompatActivity {
 
     private TextView topicTextView;
     private TextView totalText, proficientText, goodText, okText, needsWorkText;
-    int proficient, good, ok, needsWork, answerValue, totalValue =0;
+    int proficient, good, ok, needsWork, answerValue, totalValue;
     Cursor cursor;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    SQLiteDatabase cardReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class TopicScoreActivity extends AppCompatActivity {
         needsWorkText = findViewById(R.id.needsWork);
 
         topicTextView = findViewById(R.id.myScoresTitle);
-        SQLiteDatabase cardReader = cardsDbHelper.getReadableDatabase();
+        cardReader = cardsDbHelper.getReadableDatabase();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -44,17 +45,20 @@ public class TopicScoreActivity extends AppCompatActivity {
         cursor = cardReader.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
-            answerValue = cursor.getInt(cursor.getColumnIndex("correctanswered"));
-            incrementValue(answerValue);
-            totalValue++;
-        }
-        if(cursor.moveToNext()){
             do {
                 answerValue = cursor.getInt(cursor.getColumnIndex("correctanswered"));
                 incrementValue(answerValue);
                 totalValue++;
             }while(cursor.moveToNext());
         }
+        /**
+        if(cursor.moveToNext()){
+            do {
+                answerValue = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+                incrementValue(answerValue);
+                totalValue++;
+            }while(cursor.moveToNext());
+        }*/
 
 
         //Set texts
@@ -63,8 +67,6 @@ public class TopicScoreActivity extends AppCompatActivity {
         goodText.setText("Good (2/3): "+getPercentage(totalValue,good));
         okText.setText("Ok (1/3): "+getPercentage(totalValue,ok));
         needsWorkText.setText("Needs Work (0/3): "+getPercentage(totalValue,needsWork));
-
-        cardReader.close();
     }
 
     public String getPercentage(int total, int amount){
@@ -73,7 +75,7 @@ public class TopicScoreActivity extends AppCompatActivity {
         int percentage;
 
         if(total!=0){
-            percentage = ((amount/total)*100);
+            percentage = (int)(((double)amount/total)*100);
             temp = String.valueOf(percentage);
             str = temp+"%";
         }
@@ -87,26 +89,31 @@ public class TopicScoreActivity extends AppCompatActivity {
         switch (correct){
             case 4:
                 proficient++;
+                break;
             case 3:
                 proficient++;
+                break;
             case 2:
                 good++;
+                break;
             case 1:
                 ok++;
+                break;
             default:
                 needsWork++;
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cursor.close();
+    protected void onPause() {
+        super.onPause();
+        if (!cursor.isClosed()){
+            cursor.close();
+        }
+        if(cardReader.isOpen()){
+            cardReader.close();
+        }
         cardsDbHelper.close();
+        finish();
     }
 }

@@ -58,13 +58,26 @@ public class MyScoresActivity extends AppCompatActivity {
                 }
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if (!cursor.isClosed()){
+            cursor.close();
+        }
         return topics;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        topicsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        topicsDbHelper.close();
     }
 }

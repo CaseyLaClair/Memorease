@@ -23,11 +23,15 @@ public class CreateNewTopic extends AppCompatActivity {
     private AutoCompleteTextView topicTextView;
 
     TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+    SQLiteDatabase tDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_topic);
+
+        tDb = topicsDbHelper.getWritableDatabase();
 
         topicTextView = findViewById(R.id.autoCompleteTopics);
     }
@@ -70,7 +74,9 @@ public class CreateNewTopic extends AppCompatActivity {
 
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
         return flag;
     }
 
@@ -87,8 +93,6 @@ public class CreateNewTopic extends AppCompatActivity {
 
     public void createTopicInDb(String topic) {
 
-        SQLiteDatabase tDb = topicsDbHelper.getWritableDatabase();
-
         ContentValues cv = new ContentValues();
         if (TextUtils.isEmpty(topic)) {
             Toast.makeText(this, "No Topic Entered", Toast.LENGTH_LONG).show();
@@ -98,12 +102,25 @@ public class CreateNewTopic extends AppCompatActivity {
         }
 
         topicTextView.getText().clear();
-        tDb.close();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(tDb.isOpen()){
+            tDb.close();
+        }
+        topicsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        topicsDbHelper.close();
     }
 }

@@ -22,6 +22,8 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    SQLiteDatabase dbReader;
+    SQLiteDatabase dbWriter;
     Cursor cursor;
     int correctAnswered;
     String startDate;
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         Calendar current = Calendar.getInstance();
         daysCurrent = (current.getTimeInMillis() / (24 * 60 * 60 * 1000));
 
-        SQLiteDatabase dbReader = cardsDbHelper.getReadableDatabase();
-        SQLiteDatabase dbWriter = cardsDbHelper.getWritableDatabase();
+        dbReader = cardsDbHelper.getReadableDatabase();
+        dbWriter = cardsDbHelper.getWritableDatabase();
 
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + ";";
         cursor = dbReader.rawQuery(query, null);
@@ -106,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        dbReader.close();
-        dbWriter.close();
     }
 
     public boolean studyCheck(int days, int correct) {
@@ -153,10 +153,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if(dbReader.isOpen()){
+            dbReader.close();
+        }
+        if(dbWriter.isOpen()){
+            dbWriter.close();
+        }
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
+        cardsDbHelper.close();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        cardsDbHelper.close();
-        cursor.close();
     }
 }
 

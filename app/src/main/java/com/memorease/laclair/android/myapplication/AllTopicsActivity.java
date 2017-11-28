@@ -2,6 +2,7 @@ package com.memorease.laclair.android.myapplication;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +23,13 @@ public class AllTopicsActivity extends AppCompatActivity {
     //Create a DbHelper from premade class.
     TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
 
+    ArrayList<String> topics;
+    Cursor cursor;
+    String query;
+
     /**
      * onCreate method
+     *
      * @param savedInstanceState
      */
     @Override
@@ -31,9 +37,12 @@ public class AllTopicsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_topics);
 
+        query = "SELECT topic FROM topics";
+        cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         //Create an array list of all topics
-        ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
+        topics = new ArrayList<>();
+        getTopicFromDB();
         ListAdapter listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, topics);
 
         //Adapt array into a listview
@@ -51,13 +60,15 @@ public class AllTopicsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
     /**
      * sendToCreateNewTopic takes the user to a CreateNewTopic activity
+     *
      * @param view
      */
-    public void sendToCreateNewTopic(View view){
+    public void sendToCreateNewTopic(View view) {
         Intent intent = new Intent(this, CreateNewTopic.class);
         startActivity(intent);
 
@@ -66,59 +77,49 @@ public class AllTopicsActivity extends AppCompatActivity {
     /**
      * This method queries the topics db and pulls all topics into an
      * array list without duplicates.
+     *
      * @return ArrayList of topics
      */
     public ArrayList<String> getTopicFromDB() {
-
-        //Declare and init needed variables
-        ArrayList<String> topics = new ArrayList<>();
-        String query = "SELECT topic FROM topics";
-        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         //Cycle through the cursor to find topics and add to array list
         if (cursor.moveToFirst()) {
             do {
                 //If first value found @ cursor.getColumnIndex(etc) is equal to
                 //any value in topics already, dont add. Else add.
-                if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                    break;
-                } else {
-                    topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-                }
-            } while (cursor.moveToNext());
 
-            //Close the cursor being used.
-            cursor.close();
+
+                //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
+                   // break;
+                //} else {
+                    topics.add(cursor.getString(cursor.getColumnIndex("topic")));
+                //}
+            } while (cursor.moveToNext());
         }
 
         return topics;
     }
 
     /**
-     * onResume fetches new list of topics. There was an issue with topics
-     * not updating after creation and returning to this activity. This is needed
-     * to recreate the arraylist incase of updates.
-     */
-    protected void onResume(){
-
-        super.onResume();
-        ArrayList<String> topics = new ArrayList<>(getTopicFromDB());
-
-        ListAdapter listAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, topics);
-
-        ListView listView = findViewById(R.id.listViewAllTopics);
-        listView.setAdapter(listAdapter);
-        
-
-    }
-
-    /**
      * What to do when the app is closed.
      */
     @Override
-    protected void onDestroy() {
-
+    protected void onPause() {
+        super.onPause();
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
         topicsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
     }
 }

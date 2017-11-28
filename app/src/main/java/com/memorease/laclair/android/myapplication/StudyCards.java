@@ -1,5 +1,6 @@
 package com.memorease.laclair.android.myapplication;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -19,6 +20,8 @@ public class StudyCards extends AppCompatActivity {
 
     TextView topicTextView;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    SQLiteDatabase db;
+    SQLiteDatabase cardWriter;
     Cursor cursor;
     TextView qaTextView;
     String question;
@@ -34,7 +37,8 @@ public class StudyCards extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_cards);
 
-        SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
+        db = cardsDbHelper.getReadableDatabase();
+        cardWriter = cardsDbHelper.getWritableDatabase();
 
         incorrect = findViewById(R.id.incorrectButton);
         correct = findViewById(R.id.correctButton);
@@ -76,8 +80,6 @@ public class StudyCards extends AppCompatActivity {
 
     public void nextCard(View view) throws SQLException {
 
-        SQLiteDatabase cardWriter = cardsDbHelper.getWritableDatabase();
-
         if(qaTextView.getText().equals("No Cards Available"))
             return;
 
@@ -93,13 +95,18 @@ public class StudyCards extends AppCompatActivity {
                 rightOrWrong++;
             }
 
+            //NEW UPDATE
+            ContentValues values = new ContentValues();
+            values.put(CardContract.CardEntry.CORRECT_ANSWERED, rightOrWrong);
+            cardWriter.update(CardContract.CardEntry.TABLE_NAME,values,CardContract.CardEntry.QUESTION + " = ?", new String[]{question});
+            /**
             String update = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.CORRECT_ANSWERED +
                     " = " + rightOrWrong + " WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
             cardWriter.execSQL(update);
+             */
 
             checkMoveToNext();
         }
-        cardWriter.close();
     }
 
     public void checkMoveToNext(){
@@ -109,25 +116,36 @@ public class StudyCards extends AppCompatActivity {
             qaTextView.setText(question);
             incorrect.setChecked(true);
         } else {
-            finish();
+            onPause();
             overridePendingTransition(0, 0);
             startActivity(getIntent());
             overridePendingTransition(0, 0);
         }
     }
 
-    protected void onResume() {
-        super.onResume();
-        SQLiteDatabase db = cardsDbHelper.getReadableDatabase();
-        String topic = (String) topicTextView.getText();
-        String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";";
-        cursor = db.rawQuery(query, null);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(db.isOpen()){
+            db.close();
+        }
+        if (cardWriter.isOpen()){
+            cardWriter.close();
+        }
+        if (!cursor.isClosed()){
+            cursor.close();
+        }
+        cardsDbHelper.close();
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cardsDbHelper.close();
-        cursor.close();
     }
 }
