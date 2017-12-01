@@ -10,13 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.memorease.laclair.android.myapplication.data.CardContract;
+import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
 import java.util.ArrayList;
 
 public class MyScoresActivity extends AppCompatActivity {
 
-    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+    CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +46,18 @@ public class MyScoresActivity extends AppCompatActivity {
     public ArrayList<String> getTopicFromDB() {
 
         ArrayList<String> topics = new ArrayList<>();
-        String query = "SELECT topic FROM topics";
-        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+        String query = "SELECT topic FROM "+ CardContract.CardEntry.TABLE_NAME_2;
+        Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 //If first value found @ cursor.getColumnIndex(etc) is equal to
                 //any value in topics already, dont add. Else add.
-                if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                    break;
-                } else {
+                //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
+                  //  break;
+                //} else {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-                }
+                //}
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()){
@@ -67,7 +69,7 @@ public class MyScoresActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        topicsDbHelper.close();
+        cardsDbHelper.close();
         finish();
     }
 

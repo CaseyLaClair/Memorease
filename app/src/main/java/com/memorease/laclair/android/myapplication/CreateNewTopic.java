@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
+import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class CreateNewTopic extends AppCompatActivity {
 
     private AutoCompleteTextView topicTextView;
 
-    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
-    SQLiteDatabase tDb;
+    CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
+    SQLiteDatabase db;
 
 
     @Override
@@ -31,7 +32,7 @@ public class CreateNewTopic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_topic);
 
-        tDb = topicsDbHelper.getWritableDatabase();
+        db = cardsDbHelper.getWritableDatabase();
 
         topicTextView = findViewById(R.id.autoCompleteTopics);
     }
@@ -61,8 +62,8 @@ public class CreateNewTopic extends AppCompatActivity {
         boolean flag = false;
 
         //Loop through each value and compare to db, create flag variable and set to false.
-        String query = "SELECT topic FROM topics";
-        Cursor cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -98,7 +99,7 @@ public class CreateNewTopic extends AppCompatActivity {
             Toast.makeText(this, "No Topic Entered", Toast.LENGTH_LONG).show();
         } else {
             cv.put(CardContract.CardEntry.TOPIC, topic);
-            tDb.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv);
+            db.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv);
         }
 
         topicTextView.getText().clear();
@@ -107,10 +108,10 @@ public class CreateNewTopic extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(tDb.isOpen()){
-            tDb.close();
+        if(db.isOpen()){
+            db.close();
         }
-        topicsDbHelper.close();
+        cardsDbHelper.close();
         finish();
     }
 

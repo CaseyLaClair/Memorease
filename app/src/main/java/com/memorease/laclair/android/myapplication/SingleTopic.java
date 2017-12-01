@@ -15,9 +15,7 @@ import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 public class SingleTopic extends AppCompatActivity {
 
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
-    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
     SQLiteDatabase cards;
-    SQLiteDatabase topics;
 
     private TextView topicTextView;
 
@@ -27,7 +25,6 @@ public class SingleTopic extends AppCompatActivity {
         setContentView(R.layout.activity_single_topic);
 
         cards = cardsDbHelper.getWritableDatabase();
-        topics = topicsDbHelper.getWritableDatabase();
 
         topicTextView = findViewById(R.id.topicTop);
 
@@ -56,7 +53,7 @@ public class SingleTopic extends AppCompatActivity {
         String topic = (String) topicTextView.getText();
 
         cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME+" WHERE topic LIKE \"%"+topic+"%\";");
-        topics.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME_2+" WHERE topic LIKE \"%"+topic+"%\";");
+        cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME_2+" WHERE topic LIKE \"%"+topic+"%\";");
 
         Intent intent = new Intent(this, AllTopicsActivity.class);
         startActivity(intent);
@@ -68,11 +65,7 @@ public class SingleTopic extends AppCompatActivity {
         if (cards.isOpen()){
             cards.close();
         }
-        if (topics.isOpen()){
-            topics.close();
-        }
         cardsDbHelper.close();
-        topicsDbHelper.close();
         finish();
     }
 

@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.memorease.laclair.android.myapplication.data.CardContract;
+import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 public class AllTopicsActivity extends AppCompatActivity {
 
     //Create a DbHelper from premade class.
-    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
+    CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
 
     ArrayList<String> topics;
     Cursor cursor;
@@ -37,8 +39,8 @@ public class AllTopicsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_topics);
 
-        query = "SELECT topic FROM topics";
-        cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+        query = "SELECT topic FROM "+ CardContract.CardEntry.TABLE_NAME_2;
+        cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         //Create an array list of all topics
         topics = new ArrayList<>();
@@ -90,10 +92,10 @@ public class AllTopicsActivity extends AppCompatActivity {
 
 
                 //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                   // break;
+                  //  break;
                 //} else {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-                //}
+             //   }
             } while (cursor.moveToNext());
         }
 
@@ -106,10 +108,10 @@ public class AllTopicsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
-        topicsDbHelper.close();
+        cardsDbHelper.close();
         finish();
     }
 

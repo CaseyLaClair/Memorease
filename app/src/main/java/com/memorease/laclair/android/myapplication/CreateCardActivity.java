@@ -26,9 +26,7 @@ public class CreateCardActivity extends AppCompatActivity {
     //Declare all vars and open Dbs
     private AutoCompleteTextView topicTextView;
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
-    TopicsDbHelper topicsDbHelper = new TopicsDbHelper(this);
     SQLiteDatabase db;
-    SQLiteDatabase tDb;
     Cursor cursor;
 
     /**
@@ -41,7 +39,6 @@ public class CreateCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_card);
 
         db = cardsDbHelper.getWritableDatabase();
-        tDb = topicsDbHelper.getWritableDatabase();
 
         //Init textview
         topicTextView = findViewById(R.id.autoCompleteTextViewTopics);
@@ -67,18 +64,18 @@ public class CreateCardActivity extends AppCompatActivity {
     public ArrayList<String> getTopicFromDB() {
 
         ArrayList<String> topics = new ArrayList<>();
-        String query = "SELECT topic FROM topics";
-        cursor = topicsDbHelper.getReadableDatabase().rawQuery(query, null);
+        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 //If first value found @ cursor.getColumnIndex(etc) is equal to
                 //any value in topics already, dont add. Else add.
-                if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                    break;
-                } else {
+                //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
+                  //  break;
+                //} else {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-                }
+                //}
             } while (cursor.moveToNext());
         }
         return topics;
@@ -112,12 +109,40 @@ public class CreateCardActivity extends AppCompatActivity {
         ContentValues cv2 = new ContentValues();
         cv2.put(CardContract.CardEntry.TOPIC, topic);
 
-        tDb.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
+        if(!checkExistance()){
+            db.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
+        }
 
         questionText.getText().clear();
         answerText.getText().clear();
 
         Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
+    }
+
+    public boolean checkExistance() {
+
+        String topic = topicTextView.getText().toString().trim();
+
+        boolean flag = false;
+
+        //Loop through each value and compare to db, create flag variable and set to false.
+        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String sqlTopic = cursor.getString(cursor.getColumnIndex("topic"));
+
+                if (topic.equalsIgnoreCase(sqlTopic.trim())) {
+                    flag = true;
+                }
+
+            } while (cursor.moveToNext());
+        }
+        if(!cursor.isClosed()){
+            cursor.close();
+        }
+        return flag;
     }
 
     @Override
@@ -129,11 +154,7 @@ public class CreateCardActivity extends AppCompatActivity {
         if (db.isOpen()){
             db.close();
         }
-        if (tDb.isOpen()){
-            tDb.close();
-        }
         cardsDbHelper.close();
-        topicsDbHelper.close();
         finish();
     }
 

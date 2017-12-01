@@ -21,8 +21,16 @@ public class CardsDbHelper extends SQLiteOpenHelper {
                     CardEntry.CORRECT_ANSWERED + " INTEGER DEFAULT 0," +
                     CardEntry.STUDY_TODAY + " INTEGER DEFAULT 0);";
 
+    private static final String SQL_CREATE_ENTRIES_2 =
+            "CREATE TABLE " + CardEntry.TABLE_NAME_2 + " (" +
+                    CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    CardEntry.TOPIC + " TEXT NOT NULL);";
+
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + CardEntry.TABLE_NAME;
+
+    private static final String SQL_DELETE_ENTRIES_2 =
+            "DROP TABLE IF EXISTS " + CardEntry.TABLE_NAME_2;
 
     public CardsDbHelper(Context context) {
 
@@ -33,11 +41,13 @@ public class CardsDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_ENTRIES_2);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_DELETE_ENTRIES_2);
         onCreate(db);
     }
 
