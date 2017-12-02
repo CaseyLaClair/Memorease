@@ -17,6 +17,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * This class manages the study today activity and does the same
+ * as the stuudy cards activity but only pulling in cards
+ * that are due for study.
+ */
 public class TodaysStudyActivity extends AppCompatActivity {
 
     TextView topicTextView;

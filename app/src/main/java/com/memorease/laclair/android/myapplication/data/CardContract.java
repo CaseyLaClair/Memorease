@@ -2,12 +2,21 @@ package com.memorease.laclair.android.myapplication.data;
 
 import android.provider.BaseColumns;
 
-
+/**
+ * This class gives a basis for how the cards database
+ * will be laid out
+ */
 public final class CardContract {
 
+    /**
+     * Constructor
+     */
     private CardContract() {
     }
 
+    /**
+     * Layout of the database
+     */
     public static abstract class CardEntry implements BaseColumns {
 
         public static final String _ID = BaseColumns._ID;

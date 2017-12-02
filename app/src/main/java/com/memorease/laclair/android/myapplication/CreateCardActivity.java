@@ -81,8 +81,14 @@ public class CreateCardActivity extends AppCompatActivity {
         return topics;
     }
 
+    /**
+     * This method creates a row in the cards database for
+     * the cards and topics table
+     * @param view
+     */
     public void createCardOnDone(View view) {
 
+        //Declare each view and get the text input from each
         EditText acTopicText = findViewById(R.id.autoCompleteTextViewTopics);
         String topic = acTopicText.getText().toString().trim();
 
@@ -92,10 +98,12 @@ public class CreateCardActivity extends AppCompatActivity {
         EditText answerText = findViewById(R.id.answerCardText);
         String answer = answerText.getText().toString().trim();
 
+        //Get the current calendar date to set when the card is created
         Calendar current = Calendar.getInstance();
         DateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateCreated = currentFormat.format(current.getTime());
 
+        //Wrap all values up to be input in db
         ContentValues cv = new ContentValues();
         cv.put(CardContract.CardEntry.TOPIC, topic);
         cv.put(CardContract.CardEntry.QUESTION, question);
@@ -104,23 +112,33 @@ public class CreateCardActivity extends AppCompatActivity {
         cv.put(CardContract.CardEntry.CORRECT_ANSWERED, 0);
         cv.put(CardContract.CardEntry.STUDY_TODAY, 0);
 
+        //Insert values and create new cards table row
         db.insert(CardContract.CardEntry.TABLE_NAME, null, cv);
 
+        //Wrap topic value to create new row in topic table
         ContentValues cv2 = new ContentValues();
         cv2.put(CardContract.CardEntry.TOPIC, topic);
 
+        //Check topics table if the topic already exists before inputting
         if(!checkExistance()){
             db.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
         }
 
+        //Clear text fields to allow creation of another card
         questionText.getText().clear();
         answerText.getText().clear();
 
         Toast.makeText(CreateCardActivity.this, "Card Created", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * This method checks the topics table to see if
+     * the input value is already in the table
+     * @return boolean
+     */
     public boolean checkExistance() {
 
+        //Get the value from the textview
         String topic = topicTextView.getText().toString().trim();
 
         boolean flag = false;
@@ -129,6 +147,7 @@ public class CreateCardActivity extends AppCompatActivity {
         String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
         Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
+        //Check each value in the cursor to see if it equates to current textview
         if (cursor.moveToFirst()) {
             do {
                 String sqlTopic = cursor.getString(cursor.getColumnIndex("topic"));
@@ -139,6 +158,7 @@ public class CreateCardActivity extends AppCompatActivity {
 
             } while (cursor.moveToNext());
         }
+        //Close cursor if its still open
         if(!cursor.isClosed()){
             cursor.close();
         }

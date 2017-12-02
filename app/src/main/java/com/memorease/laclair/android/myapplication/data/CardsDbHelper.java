@@ -6,11 +6,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.memorease.laclair.android.myapplication.data.CardContract.*;
 
+/**
+ * This class is a DbHelper class to support the creation
+ * and upkeep of the cards database
+ */
 public class CardsDbHelper extends SQLiteOpenHelper {
 
+    //Database version and name
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Cards.db";
 
+    //Create entries for tables in the database
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -26,12 +32,14 @@ public class CardsDbHelper extends SQLiteOpenHelper {
                     CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     CardEntry.TOPIC + " TEXT NOT NULL);";
 
+    //Delete entries for each table in the database
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + CardEntry.TABLE_NAME;
 
     private static final String SQL_DELETE_ENTRIES_2 =
             "DROP TABLE IF EXISTS " + CardEntry.TABLE_NAME_2;
 
+    //Constructor
     public CardsDbHelper(Context context) {
 
         super(context, DATABASE_NAME,null, DATABASE_VERSION);

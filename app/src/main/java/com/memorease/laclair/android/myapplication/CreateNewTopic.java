@@ -8,19 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
-import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
-
-import java.util.ArrayList;
 
 public class CreateNewTopic extends AppCompatActivity {
 
+    //Declare vars and dbs
     private AutoCompleteTextView topicTextView;
 
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
@@ -37,6 +33,11 @@ public class CreateNewTopic extends AppCompatActivity {
         topicTextView = findViewById(R.id.autoCompleteTopics);
     }
 
+    /**
+     * This method takes to create card activity with newly created
+     * topic value passed.
+     * @param view
+     */
     public void createWithCards(View view) {
 
         String topic = topicTextView.getText().toString().trim();
@@ -55,6 +56,10 @@ public class CreateNewTopic extends AppCompatActivity {
 
     }
 
+    /**
+     * This method checks the existance of the topic in the topics table
+     * @return boolean
+     */
     public boolean checkExistance() {
 
         String topic = topicTextView.getText().toString().trim();
@@ -81,6 +86,10 @@ public class CreateNewTopic extends AppCompatActivity {
         return flag;
     }
 
+    /**
+     * This method creates the topic without taking to a new activity.
+     * @param view
+     */
     public void createCardsLater(View view) {
 
         String topic = topicTextView.getText().toString().trim();
@@ -92,8 +101,14 @@ public class CreateNewTopic extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method creates a new topic in the topics table
+     * @param topic
+     */
     public void createTopicInDb(String topic) {
 
+        //Check that the topic isn't already created
+        //If it's not, create.
         ContentValues cv = new ContentValues();
         if (TextUtils.isEmpty(topic)) {
             Toast.makeText(this, "No Topic Entered", Toast.LENGTH_LONG).show();

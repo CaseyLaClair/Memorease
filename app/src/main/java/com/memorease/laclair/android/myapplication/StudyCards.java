@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 
+/**
+ * This class manages the study cards activity
+ */
 public class StudyCards extends AppCompatActivity {
 
     TextView topicTextView;
@@ -46,6 +49,7 @@ public class StudyCards extends AppCompatActivity {
         qaTextView = findViewById(R.id.textView2);
         delete = findViewById(R.id.checkBox);
 
+        //Pull in topic passed in from other activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String topicPassed = extras.getString("topic");
@@ -57,6 +61,8 @@ public class StudyCards extends AppCompatActivity {
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";";
         cursor = db.rawQuery(query, null);
 
+        //Get the first question and answer from the cursor
+        //If none, display that none exist
         if (cursor.moveToFirst()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
@@ -68,6 +74,12 @@ public class StudyCards extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method flips the card to display the answer or question
+     * depending on which is already showing
+     *
+     * @param view
+     */
     public void flipCard(View view) {
 
         if (qaTextView.getText().equals(question)) {
@@ -78,13 +90,19 @@ public class StudyCards extends AppCompatActivity {
 
     }
 
+    /**
+     * This method pulls the next card to be studied
+     * and also updates the previous card whether the user got it right or wrong.
+     * @param view
+     * @throws SQLException
+     */
     public void nextCard(View view) throws SQLException {
 
-        if(qaTextView.getText().equals("No Cards Available"))
+        if (qaTextView.getText().equals("No Cards Available"))
             return;
 
         if (delete.isChecked()) {
-            cardWriter.delete(CardContract.CardEntry.TABLE_NAME,"question=? and answer=?",new String[]{question,answer});
+            cardWriter.delete(CardContract.CardEntry.TABLE_NAME, "question=? and answer=?", new String[]{question, answer});
             delete.setChecked(false);
             checkMoveToNext();
         } else {
@@ -95,21 +113,19 @@ public class StudyCards extends AppCompatActivity {
                 rightOrWrong++;
             }
 
-            //NEW UPDATE
             ContentValues values = new ContentValues();
             values.put(CardContract.CardEntry.CORRECT_ANSWERED, rightOrWrong);
-            cardWriter.update(CardContract.CardEntry.TABLE_NAME,values,CardContract.CardEntry.QUESTION + " = ?", new String[]{question});
-            /**
-            String update = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.CORRECT_ANSWERED +
-                    " = " + rightOrWrong + " WHERE " + CardContract.CardEntry.QUESTION + " = '" + question + "'";
-            cardWriter.execSQL(update);
-             */
+            cardWriter.update(CardContract.CardEntry.TABLE_NAME, values, CardContract.CardEntry.QUESTION + " = ?", new String[]{question});
 
             checkMoveToNext();
         }
     }
 
-    public void checkMoveToNext(){
+    /**
+     * This method checks if there are other cards to study.
+     * If not, it cycles back to the beginning
+     */
+    public void checkMoveToNext() {
         if (cursor.moveToNext()) {
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
@@ -126,13 +142,13 @@ public class StudyCards extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.close();
         }
-        if (cardWriter.isOpen()){
+        if (cardWriter.isOpen()) {
             cardWriter.close();
         }
-        if (!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         cardsDbHelper.close();

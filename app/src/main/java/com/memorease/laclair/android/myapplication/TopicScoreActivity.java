@@ -1,6 +1,5 @@
 package com.memorease.laclair.android.myapplication;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,6 +9,9 @@ import android.widget.TextView;
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 
+/**
+ * This class displays analytics for individual topics
+ */
 public class TopicScoreActivity extends AppCompatActivity {
 
     private TextView topicTextView;
@@ -51,15 +53,6 @@ public class TopicScoreActivity extends AppCompatActivity {
                 totalValue++;
             }while(cursor.moveToNext());
         }
-        /**
-        if(cursor.moveToNext()){
-            do {
-                answerValue = cursor.getInt(cursor.getColumnIndex("correctanswered"));
-                incrementValue(answerValue);
-                totalValue++;
-            }while(cursor.moveToNext());
-        }*/
-
 
         //Set texts
         totalText.setText("Total Cards: "+totalValue);
@@ -69,6 +62,13 @@ public class TopicScoreActivity extends AppCompatActivity {
         needsWorkText.setText("Needs Work (0/3): "+getPercentage(totalValue,needsWork));
     }
 
+    /**
+     * This method gets the percentage for values of the
+     * cards studied and their proficiency.
+     * @param total
+     * @param amount
+     * @return String
+     */
     public String getPercentage(int total, int amount){
         String str;
         String temp;
@@ -84,7 +84,7 @@ public class TopicScoreActivity extends AppCompatActivity {
 
         return str;
     }
-
+    
     public void incrementValue(int correct){
         switch (correct){
             case 4:

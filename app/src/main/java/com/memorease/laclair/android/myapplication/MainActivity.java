@@ -6,21 +6,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
 import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
-import com.memorease.laclair.android.myapplication.data.TopicsDbHelper;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+ * Main activity. This opens with the opening of the application.
+ */
 public class MainActivity extends AppCompatActivity {
 
+    //Declare all vars and dbs
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
     SQLiteDatabase dbReader;
     SQLiteDatabase dbWriter;
@@ -36,76 +36,74 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /**
-         * Put all of this in onResume too! Incase user never closes app
-         * and comes back to it a day later!!!!!!!!!
-         */
+        //Get current time in millis
         boolean flag;
         Calendar current = Calendar.getInstance();
         daysCurrent = (current.getTimeInMillis() / (24 * 60 * 60 * 1000));
 
+        //Get a readable and writable version of the db
         dbReader = cardsDbHelper.getReadableDatabase();
         dbWriter = cardsDbHelper.getWritableDatabase();
 
         String query = "SELECT * FROM " + CardContract.CardEntry.TABLE_NAME + ";";
         cursor = dbReader.rawQuery(query, null);
 
-        if (cursor ==null) {
-            if (cursor.moveToFirst()) {
-                int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
-                startDate = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.STUDY_DATE));
-                correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+        //Cycle through cursor and find values and check
+        //if they should be studied today.
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
+            startDate = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.STUDY_DATE));
+            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-                SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date myDate = currentFormat.parse(startDate);
-                    milliStart = myDate.getTime();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                daysStart = (milliStart / (24 * 60 * 60 * 1000));
+            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date myDate = currentFormat.parse(startDate);
+                milliStart = myDate.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            daysStart = (milliStart / (24 * 60 * 60 * 1000));
 
-                int days = (int) (daysCurrent - daysStart);
-                flag = studyCheck(days, correctAnswered);
+            int days = (int) (daysCurrent - daysStart);
+            flag = studyCheck(days, correctAnswered);
 
-                if (flag == true) {
-                    String dateCreated = currentFormat.format(current.getTime());
-                    String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                            " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
-                    String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                            " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
+            if (flag == true) {
+                String dateCreated = currentFormat.format(current.getTime());
+                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                        " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
+                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                        " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
 
-                    dbWriter.execSQL(updateDate);
-                    dbWriter.execSQL(updateStudy);
-                }
+                dbWriter.execSQL(updateDate);
+                dbWriter.execSQL(updateStudy);
+            }
 
-            } else if (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
-                startDate = cursor.getString(cursor.getColumnIndex("studydate"));
-                correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
+        } else if (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
+            startDate = cursor.getString(cursor.getColumnIndex("studydate"));
+            correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
-                SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date myDate = currentFormat.parse(startDate);
-                    milliStart = myDate.getTime();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                daysStart = (milliStart / (24 * 60 * 60 * 1000));
+            SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date myDate = currentFormat.parse(startDate);
+                milliStart = myDate.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            daysStart = (milliStart / (24 * 60 * 60 * 1000));
 
-                int days = (int) (daysCurrent - daysStart);
-                flag = studyCheck(days, correctAnswered);
+            int days = (int) (daysCurrent - daysStart);
+            flag = studyCheck(days, correctAnswered);
 
-                if (flag == true) {
-                    String dateCreated = currentFormat.format(current.getTime());
-                    String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
-                            " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
-                    String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
-                            " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
+            if (flag == true) {
+                String dateCreated = currentFormat.format(current.getTime());
+                String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
+                        " = '" + dateCreated + "' WHERE " + CardContract.CardEntry._ID + " = " + id;
+                String updateStudy = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_TODAY +
+                        " = 1 WHERE " + CardContract.CardEntry._ID + " = " + id;
 
-                    dbWriter.execSQL(updateDate);
-                    dbWriter.execSQL(updateStudy);
-                }
+                dbWriter.execSQL(updateDate);
+                dbWriter.execSQL(updateStudy);
             }
         }
     }
@@ -155,13 +153,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(dbReader.isOpen()){
+        if (dbReader.isOpen()) {
             dbReader.close();
         }
-        if(dbWriter.isOpen()){
+        if (dbWriter.isOpen()) {
             dbWriter.close();
         }
-        if(!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         cardsDbHelper.close();
