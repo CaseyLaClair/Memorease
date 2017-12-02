@@ -29,7 +29,9 @@
             android:layout_below="@id/autoCompleteTextViewTopics">
 
             <android.support.v7.widget.CardView
-                style="@style/CardViewForCreateCardActivity">
+                style="@style/CardViewForCreateCardActivity"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp">
 
                 <EditText
                     android:id="@+id/questionCardText"
@@ -46,7 +48,9 @@
             android:layout_below="@id/questionCardView">
 
             <android.support.v7.widget.CardView
-                style="@style/CardViewForCreateCardActivity">
+                style="@style/CardViewForCreateCardActivity"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp">
 
                 <EditText
                     android:id="@+id/answerCardText"
@@ -63,8 +67,11 @@
             android:layout_width="256dp"
             android:layout_below="@id/answerCardView"
             android:layout_margin="16dp"
-            android:hint="@string/done"
-            android:onClick="createCardOnDone" />
+            android:text="@string/done"
+            android:onClick="createCardOnDone"
+            android:background="#3d5afe"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

@@ -20,35 +20,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="28dp"/>
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="18dp"
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/proficient"
             android:layout_below="@id/totalCards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="28dp"/>
+            android:layout_margin="28dp"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/good"
             android:layout_below="@id/proficient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="28dp"/>
+            android:layout_margin="28dp"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/ok"
             android:layout_below="@id/good"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="28dp"/>
+            android:layout_margin="28dp"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/needsWork"
             android:layout_below="@id/ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="28dp"/>
+            android:layout_margin="28dp"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
