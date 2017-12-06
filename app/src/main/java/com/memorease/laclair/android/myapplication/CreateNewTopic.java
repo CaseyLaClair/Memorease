@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.memorease.laclair.android.myapplication.data.CardContract;
@@ -17,7 +18,7 @@ import com.memorease.laclair.android.myapplication.data.CardsDbHelper;
 public class CreateNewTopic extends AppCompatActivity {
 
     //Declare vars and dbs
-    private AutoCompleteTextView topicTextView;
+    private TextView topicTextView;
 
     CardsDbHelper cardsDbHelper = new CardsDbHelper(this);
     SQLiteDatabase db;
@@ -117,7 +118,7 @@ public class CreateNewTopic extends AppCompatActivity {
             db.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv);
         }
 
-        topicTextView.getText().clear();
+        topicTextView.setText("");
     }
 
     @Override
