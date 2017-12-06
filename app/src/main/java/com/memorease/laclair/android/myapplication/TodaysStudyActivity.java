@@ -30,6 +30,7 @@ public class TodaysStudyActivity extends AppCompatActivity {
     SQLiteDatabase cardWriter;
     Cursor cursor;
     TextView qaTextView;
+    String topic;
     String question;
     String answer;
     RadioButton incorrect;
@@ -55,8 +56,10 @@ public class TodaysStudyActivity extends AppCompatActivity {
         cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
+            topic = cursor.getString(cursor.getColumnIndex("topic"));
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
+            topicTextView.setText(topic);
             qaTextView.setText(question);
         } else {
             question = "No Cards Available";
@@ -116,8 +119,10 @@ public class TodaysStudyActivity extends AppCompatActivity {
 
     public void checkMoveToNext() {
         if (cursor.moveToNext()) {
+            topic = cursor.getString(cursor.getColumnIndex("topic"));
             question = cursor.getString(cursor.getColumnIndex("question"));
             answer = cursor.getString(cursor.getColumnIndex("answer"));
+            topicTextView.setText(topic);
             qaTextView.setText(question);
             incorrect.setChecked(true);
         } else {

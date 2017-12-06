@@ -84,7 +84,7 @@ public class TopicScoreActivity extends AppCompatActivity {
 
         return str;
     }
-    
+
     public void incrementValue(int correct){
         switch (correct){
             case 4:
