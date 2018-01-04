@@ -40,9 +40,10 @@ public class SingleTopic extends AppCompatActivity {
     /**
      * This method takes the user to the study cards
      * activity for the current topic
+     *
      * @param view
      */
-    public void takeToStudyCards(View view){
+    public void takeToStudyCards(View view) {
         Intent intent = new Intent(this, StudyCards.class);
         intent.putExtra("topic", topicTextView.getText());
         startActivity(intent);
@@ -50,9 +51,10 @@ public class SingleTopic extends AppCompatActivity {
 
     /**
      * This method takes the user to create cards for the current topic
+     *
      * @param view
      */
-    public void takeToCreateCard(View view){
+    public void takeToCreateCard(View view) {
         Intent intent = new Intent(this, CreateCardActivity.class);
         intent.putExtra("topicName", topicTextView.getText());
         startActivity(intent);
@@ -61,14 +63,15 @@ public class SingleTopic extends AppCompatActivity {
     /**
      * This method deletes all cards related to an activity and
      * deletes the topic from the topics table
+     *
      * @param view
      */
-    public void deleteAllCards(View view){
+    public void deleteAllCards(View view) {
 
         String topic = (String) topicTextView.getText();
 
-        cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME+" WHERE topic LIKE \"%"+topic+"%\";");
-        cards.execSQL("DELETE FROM "+CardContract.CardEntry.TABLE_NAME_2+" WHERE topic LIKE \"%"+topic+"%\";");
+        cards.execSQL("DELETE FROM " + CardContract.CardEntry.TABLE_NAME + " WHERE topic LIKE \"%" + topic + "%\";");
+        cards.execSQL("DELETE FROM " + CardContract.CardEntry.TABLE_NAME_2 + " WHERE topic LIKE \"%" + topic + "%\";");
 
         Intent intent = new Intent(this, AllTopicsActivity.class);
         startActivity(intent);
@@ -77,7 +80,7 @@ public class SingleTopic extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (cards.isOpen()){
+        if (cards.isOpen()) {
             cards.close();
         }
         cardsDbHelper.close();

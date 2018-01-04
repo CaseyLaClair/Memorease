@@ -80,7 +80,7 @@ public class TodaysStudyActivity extends AppCompatActivity {
 
     public void nextCardStudy(View view) throws SQLException {
 
-        if(qaTextView.getText().equals("No Cards Available"))
+        if (qaTextView.getText().equals("No Cards Available"))
             return;
 
         if (delete.isChecked()) {
@@ -136,13 +136,13 @@ public class TodaysStudyActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (db.isOpen()){
+        if (db.isOpen()) {
             db.close();
         }
-        if(cardWriter.isOpen()){
+        if (cardWriter.isOpen()) {
             cardWriter.close();
         }
-        if(!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         cardsDbHelper.close();

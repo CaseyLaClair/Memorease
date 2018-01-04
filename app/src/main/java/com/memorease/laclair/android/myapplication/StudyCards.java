@@ -93,6 +93,7 @@ public class StudyCards extends AppCompatActivity {
     /**
      * This method pulls the next card to be studied
      * and also updates the previous card whether the user got it right or wrong.
+     *
      * @param view
      * @throws SQLException
      */

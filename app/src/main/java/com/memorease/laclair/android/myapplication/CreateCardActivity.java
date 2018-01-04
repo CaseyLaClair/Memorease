@@ -31,6 +31,7 @@ public class CreateCardActivity extends AppCompatActivity {
 
     /**
      * onCreate method
+     *
      * @param savedInstanceState
      */
     @Override
@@ -59,23 +60,18 @@ public class CreateCardActivity extends AppCompatActivity {
 
     /**
      * This method gets all topic values from the Db and fills an array
+     *
      * @return ArrayList of topics
      */
     public ArrayList<String> getTopicFromDB() {
 
         ArrayList<String> topics = new ArrayList<>();
-        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        String query = "SELECT topic FROM " + CardContract.CardEntry.TABLE_NAME_2;
         cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                //If first value found @ cursor.getColumnIndex(etc) is equal to
-                //any value in topics already, dont add. Else add.
-                //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                  //  break;
-                //} else {
-                    topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-                //}
+                topics.add(cursor.getString(cursor.getColumnIndex("topic")));
             } while (cursor.moveToNext());
         }
         return topics;
@@ -84,6 +80,7 @@ public class CreateCardActivity extends AppCompatActivity {
     /**
      * This method creates a row in the cards database for
      * the cards and topics table
+     *
      * @param view
      */
     public void createCardOnDone(View view) {
@@ -120,7 +117,7 @@ public class CreateCardActivity extends AppCompatActivity {
         cv2.put(CardContract.CardEntry.TOPIC, topic);
 
         //Check topics table if the topic already exists before inputting
-        if(!checkExistance()){
+        if (!checkExistance()) {
             db.insert(CardContract.CardEntry.TABLE_NAME_2, null, cv2);
         }
 
@@ -134,6 +131,7 @@ public class CreateCardActivity extends AppCompatActivity {
     /**
      * This method checks the topics table to see if
      * the input value is already in the table
+     *
      * @return boolean
      */
     public boolean checkExistance() {
@@ -144,7 +142,7 @@ public class CreateCardActivity extends AppCompatActivity {
         boolean flag = false;
 
         //Loop through each value and compare to db, create flag variable and set to false.
-        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        String query = "SELECT topic FROM " + CardContract.CardEntry.TABLE_NAME_2;
         Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         //Check each value in the cursor to see if it equates to current textview
@@ -159,7 +157,7 @@ public class CreateCardActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         //Close cursor if its still open
-        if(!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         return flag;
@@ -168,10 +166,10 @@ public class CreateCardActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
-        if (db.isOpen()){
+        if (db.isOpen()) {
             db.close();
         }
         cardsDbHelper.close();

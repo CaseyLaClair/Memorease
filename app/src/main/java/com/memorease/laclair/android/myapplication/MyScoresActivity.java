@@ -49,22 +49,23 @@ public class MyScoresActivity extends AppCompatActivity {
     /**
      * This method gets a list of the topics currently
      * created by the user.
+     *
      * @return ArrayList of topics
      */
     public ArrayList<String> getTopicFromDB() {
 
         //Create cursor of all topics in db
         ArrayList<String> topics = new ArrayList<>();
-        String query = "SELECT topic FROM "+ CardContract.CardEntry.TABLE_NAME_2;
+        String query = "SELECT topic FROM " + CardContract.CardEntry.TABLE_NAME_2;
         Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         //Add each topic from the table to the list
         if (cursor.moveToFirst()) {
             do {
-                    topics.add(cursor.getString(cursor.getColumnIndex("topic")));
+                topics.add(cursor.getString(cursor.getColumnIndex("topic")));
             } while (cursor.moveToNext());
         }
-        if (!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         return topics;

@@ -37,6 +37,7 @@ public class CreateNewTopic extends AppCompatActivity {
     /**
      * This method takes to create card activity with newly created
      * topic value passed.
+     *
      * @param view
      */
     public void createWithCards(View view) {
@@ -59,6 +60,7 @@ public class CreateNewTopic extends AppCompatActivity {
 
     /**
      * This method checks the existance of the topic in the topics table
+     *
      * @return boolean
      */
     public boolean checkExistance() {
@@ -68,7 +70,7 @@ public class CreateNewTopic extends AppCompatActivity {
         boolean flag = false;
 
         //Loop through each value and compare to db, create flag variable and set to false.
-        String query = "SELECT topic FROM "+CardContract.CardEntry.TABLE_NAME_2;
+        String query = "SELECT topic FROM " + CardContract.CardEntry.TABLE_NAME_2;
         Cursor cursor = cardsDbHelper.getReadableDatabase().rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -81,7 +83,7 @@ public class CreateNewTopic extends AppCompatActivity {
 
             } while (cursor.moveToNext());
         }
-        if(!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
         return flag;
@@ -89,6 +91,7 @@ public class CreateNewTopic extends AppCompatActivity {
 
     /**
      * This method creates the topic without taking to a new activity.
+     *
      * @param view
      */
     public void createCardsLater(View view) {
@@ -104,6 +107,7 @@ public class CreateNewTopic extends AppCompatActivity {
 
     /**
      * This method creates a new topic in the topics table
+     *
      * @param topic
      */
     public void createTopicInDb(String topic) {
@@ -124,7 +128,7 @@ public class CreateNewTopic extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.close();
         }
         cardsDbHelper.close();

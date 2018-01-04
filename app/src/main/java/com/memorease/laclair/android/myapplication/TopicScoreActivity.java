@@ -51,42 +51,42 @@ public class TopicScoreActivity extends AppCompatActivity {
                 answerValue = cursor.getInt(cursor.getColumnIndex("correctanswered"));
                 incrementValue(answerValue);
                 totalValue++;
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         //Set texts
-        totalText.setText("Total Cards: "+totalValue);
-        proficientText.setText("Proficient (3/3): "+getPercentage(totalValue,proficient));
-        goodText.setText("Good (2/3): "+getPercentage(totalValue,good));
-        okText.setText("Ok (1/3): "+getPercentage(totalValue,ok));
-        needsWorkText.setText("Needs Work (0/3): "+getPercentage(totalValue,needsWork));
+        totalText.setText("Total Cards: " + totalValue);
+        proficientText.setText("Proficient (3/3): " + getPercentage(totalValue, proficient));
+        goodText.setText("Good (2/3): " + getPercentage(totalValue, good));
+        okText.setText("Ok (1/3): " + getPercentage(totalValue, ok));
+        needsWorkText.setText("Needs Work (0/3): " + getPercentage(totalValue, needsWork));
     }
 
     /**
      * This method gets the percentage for values of the
      * cards studied and their proficiency.
+     *
      * @param total
      * @param amount
      * @return String
      */
-    public String getPercentage(int total, int amount){
+    public String getPercentage(int total, int amount) {
         String str;
         String temp;
         int percentage;
 
-        if(total!=0){
-            percentage = (int)(((double)amount/total)*100);
+        if (total != 0) {
+            percentage = (int) (((double) amount / total) * 100);
             temp = String.valueOf(percentage);
-            str = temp+"%";
-        }
-        else
+            str = temp + "%";
+        } else
             str = "No Cards";
 
         return str;
     }
 
-    public void incrementValue(int correct){
-        switch (correct){
+    public void incrementValue(int correct) {
+        switch (correct) {
             case 4:
                 proficient++;
                 break;
@@ -107,10 +107,10 @@ public class TopicScoreActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (!cursor.isClosed()){
+        if (!cursor.isClosed()) {
             cursor.close();
         }
-        if(cardReader.isOpen()){
+        if (cardReader.isOpen()) {
             cardReader.close();
         }
         cardsDbHelper.close();

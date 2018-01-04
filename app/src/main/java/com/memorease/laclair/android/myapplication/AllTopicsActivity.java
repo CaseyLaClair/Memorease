@@ -85,15 +85,7 @@ public class AllTopicsActivity extends AppCompatActivity {
         //Cycle through the cursor to find topics and add to array list
         if (cursor.moveToFirst()) {
             do {
-                //If first value found @ cursor.getColumnIndex(etc) is equal to
-                //any value in topics already, dont add. Else add.
-
-
-                //if (topics.contains(cursor.getString(cursor.getColumnIndex("topic")))) {
-                  //  break;
-                //} else {
                     topics.add(cursor.getString(cursor.getColumnIndex("topic")));
-             //   }
             } while (cursor.moveToNext());
         }
 
