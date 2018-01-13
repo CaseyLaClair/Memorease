@@ -90,6 +90,7 @@ public class StudyCards extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             return inflater.inflate(R.layout.fragment_card_front, container, false);
+
         }
     }
 
