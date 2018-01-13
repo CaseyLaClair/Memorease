@@ -1,5 +1,6 @@
 package com.memorease.laclair.android.myapplication;
 
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,7 +8,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -40,6 +43,13 @@ public class StudyCards extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_cards);
 
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, new CardFrontFragment())
+                    .commit();
+        }
+
         db = cardsDbHelper.getReadableDatabase();
         cardWriter = cardsDbHelper.getWritableDatabase();
 
@@ -71,6 +81,22 @@ public class StudyCards extends AppCompatActivity {
             question = "No Cards Available";
             answer = "Nothing On This Side Either";
             qaTextView.setText(question);
+        }
+    }
+
+    public class CardFrontFragment extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_card_front, container, false);
+        }
+    }
+
+    public class CardBackFragment extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_card_back, container, false);
         }
     }
 
