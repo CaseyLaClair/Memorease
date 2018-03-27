@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Get current time in millis
+        //Get current time in millis and a flag.
         boolean flag;
         Calendar current = Calendar.getInstance();
         daysCurrent = (current.getTimeInMillis() / (24 * 60 * 60 * 1000));
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             startDate = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.STUDY_DATE));
             correctAnswered = cursor.getInt(cursor.getColumnIndex("correctanswered"));
 
+            //Create format used in db dates
             SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date myDate = currentFormat.parse(startDate);
@@ -62,11 +63,14 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            //Find days since the card was created.
             daysStart = (milliStart / (24 * 60 * 60 * 1000));
 
+            //Days that have elapsed since it's creation or last time it was studied.
             int days = (int) (daysCurrent - daysStart);
             flag = studyCheck(days, correctAnswered);
 
+            //Update to be studied today if it meets studyCheck criteria.
             if (flag == true) {
                 String dateCreated = currentFormat.format(current.getTime());
                 String updateDate = "UPDATE " + CardContract.CardEntry.TABLE_NAME + " SET " + CardContract.CardEntry.STUDY_DATE +
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 dbWriter.execSQL(updateDate);
                 dbWriter.execSQL(updateStudy);
             }
-
+        //Do the same as above for the next card if there is another.
         } else if (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(CardContract.CardEntry._ID));
             startDate = cursor.getString(cursor.getColumnIndex("studydate"));
@@ -108,9 +112,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Check if a cards values indicate a time to study
     public boolean studyCheck(int days, int correct) {
         boolean value = false;
 
+        //Values to check if a card should be studied.
         if (correct == 0 && days != 0) {
             value = true;
         } else if (correct == 1 && days > 1) {
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //Close database connections and cursor image if the activity is paused.
     @Override
     protected void onPause() {
         super.onPause();
